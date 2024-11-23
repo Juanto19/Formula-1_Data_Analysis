@@ -1,8 +1,8 @@
 import streamlit as st
 import sys
 
-sys.path.append(r'.\APP\page_prueba')
-
+sys.path.append(r'.\page_prueba')
+APP\page_prueba\Grand_Prix.py
 from Grand_Prix import app as gran_premio_app
 from Temporada import app as temporadas_app
 from Circuitos import app as circuitos_app
