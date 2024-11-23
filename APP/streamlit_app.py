@@ -3,7 +3,7 @@ import sys
 
 # sys.path.append(r'.\page_prueba')
 # APP\page_prueba\Grand_Prix.py
-from APP.page_prueba.Grand_Prix import app as gran_premio_app
+from page_prueba.Grand_Prix import app as gran_premio_app
 from APP.page_prueba.Temporada import app as temporadas_app
 from APP.page_prueba.Circuitos import app as circuitos_app
 from APP.page_prueba.Contacto import app as contacto_app
