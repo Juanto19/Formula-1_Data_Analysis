@@ -16,13 +16,13 @@ def app():
 
     st.markdown("<h3 style='text-align: center;'>Clasificación de Pilotos</h3>", unsafe_allow_html=True)
     st.image(
-        fr'D:\Cositas\Proyecto_UH\APP\images\points_heatmaps\{season}_drivers_points_heatmap.png', 
+        fr'.\APP\images\points_heatmaps\{season}_drivers_points_heatmap.png', 
             caption='Resumen de la Temporada 2023', 
             width=1000)
 
     st.markdown("<h3 style='text-align: center;'>Clasificación de Constructores</h3>", unsafe_allow_html=True)
     st.image(
-        fr'D:\Cositas\Proyecto_UH\APP\images\points_heatmaps\{season}_teams_points_heatmap.png', 
+        fr'.\APP\images\points_heatmaps\{season}_teams_points_heatmap.png', 
         caption='Resumen de la Temporada 2023', 
         width=1000
     )
@@ -40,9 +40,9 @@ def app():
 
     st.markdown("<h3 style='text-align: center;'>Comparativa de Pilotos</h3>", unsafe_allow_html=True)
 
-    year_results= pd.read_csv(fr'D:\Cositas\Proyecto_UH\data\bueno\2023\HtH\{season}_results.csv')
-    # year_sprint_results = pd.read_csv(fr'D:\Cositas\Proyecto_UH\data\bueno\HtH\{season}_sprint_results.csv')
-    # year_q_results = pd.read_csv(fr'D:\Cositas\Proyecto_UH\data\bueno\HtH\{season}_q_results.csv')
+    year_results= pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_results.csv')
+    # year_sprint_results = pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_sprint_results.csv')
+    # year_q_results = pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_q_results.csv')
 
     drivers = list(year_results['driverCode'].value_counts().index[:19])
     driver_1 = st.selectbox("Selecciona el primer piloto", drivers)
@@ -55,15 +55,4 @@ def app():
         comparisons_head_to_head = f.compare_results_pair(season, drivers_to_comp)
         fig_hth = f.plot_comparisons(season, comparisons_head_to_head)
         st.pyplot(fig_hth)
-    # # Load data
-    # data = pd.read_csv('/d:/Cositas/Proyecto_UH/APP/data/2023_driver_standings.csv')
 
-        # # Create a bar chart
-        # fig, ax = plt.subplots()
-        # ax.bar(data['Driver'], data['Points'], color='blue')
-        # ax.set_xlabel('Driver')
-        # ax.set_ylabel('Points')
-        # ax.set_title('2023 Driver Standings')
-
-        # # Display the chart in Streamlit
-        # st.pyplot(fig)

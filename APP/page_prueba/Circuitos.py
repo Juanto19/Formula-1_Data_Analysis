@@ -5,7 +5,7 @@ import sys
 
 
 def app():
-    sys.path.append(r'D:\Cositas\Proyecto_UH\APP')
+    sys.path.append(r'C:\Users\Usuario\Documents\GitHub\Formula-1_Data_Analysis\APP')
     import functions as f
 
 
@@ -65,7 +65,7 @@ def app():
     st.header(f"Detalles del Circuito: {selected_circuit}")
     col1, col2 = st.columns(2)
     with col1:  
-        st.image(f"D:\Cositas\Proyecto_UH\APP\images\circuits\{selected_circuit.lower().replace(' ', '_')}_speed_track.png", caption="Trazado del Circuito")
+        st.image(f"../images/circuits/{selected_circuit.lower().replace(' ', '_')}_speed_track.png", caption="Trazado del Circuito")
     with col2:
         st.metric("Longitud", f"{circuit_details['Longitud (km)']} km")
         st.metric("Curvas", circuit_details["Curvas"])
@@ -75,7 +75,7 @@ def app():
 
 
     #Mostrar graficas
-    circuits_info = pd.read_csv(r"D:\Cositas\Proyecto_UH\data\bueno\2023\circuits_info\circuits_2023_info.csv")
+    circuits_info = pd.read_csv(r".\data\bueno\2023\circuits_info\circuits_2023_info.csv")
 
     col2_1, col2_2, col2_3 = st.columns([1,4,1])
 

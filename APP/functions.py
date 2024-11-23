@@ -208,9 +208,9 @@ def compare_poles(drivers_to_comp, quali_positions):
 
 #Recap all HtH functions
 def compare_results_pair(year, drivers_to_comp):
-    results = pd.read_csv(rf'D:\Cositas\Proyecto_UH\data\bueno\{year}\HtH\{year}_results.csv')
-    sprint_results = pd.read_csv(rf'D:\Cositas\Proyecto_UH\data\bueno\{year}\HtH\{year}_sprint_results.csv')
-    q_results = pd.read_csv(rf'D:\Cositas\Proyecto_UH\data\bueno\{year}\HtH\{year}_q_results.csv')
+    results = pd.read_csv(rf'.\data\bueno\{year}\HtH\{year}_results.csv')
+    sprint_results = pd.read_csv(rf'.\data\bueno\{year}\HtH\{year}_sprint_results.csv')
+    q_results = pd.read_csv(rf'.\data\bueno\{year}\HtH\{year}_q_results.csv')
 
     results_to_comp = results_pair(results, drivers_to_comp)
     sprint_results_to_comp = results_pair_sprint(sprint_results, drivers_to_comp)
@@ -254,7 +254,7 @@ def compare_results_pair(year, drivers_to_comp):
 
 def plot_comparisons(year, comparisons):
     
-    with open(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Drivers\driver_info_{year}.json', 'r') as f:
+    with open(rf'.\data\bueno\{year}\Ritmos\Drivers\driver_info_{year}.json', 'r') as f:
         driver_info = json.load(f)
     driver_palette = driver_info['driver_palette']
 
@@ -494,22 +494,22 @@ def data_year_pace_driver(year):
         
     # Transpose dataframe
     df_ritmos = mean_diff_df.T  
-    df_ritmos.to_csv(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Drivers\df_ritmos_{year}.csv')
+    df_ritmos.to_csv(rf'.\data\bueno\{year}\Ritmos\Drivers\df_ritmos_{year}.csv')
     data = {
         "driver_palette": driver_palette,
         "driver_line": driver_line
     }
 
-    with open(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Drivers\driver_info_{year}.json', 'w') as f:
+    with open(rf'.\data\bueno\{year}\Ritmos\Drivers\driver_info_{year}.json', 'w') as f:
         json.dump(data, f)
 
 #Plot the pace of the drivers in each race
 
 
 def plot_year_pace_driver(year):
-    df_ritmos = pd.read_csv(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Drivers\df_ritmos_{year}.csv', index_col=0)
+    df_ritmos = pd.read_csv(rf'.\data\bueno\{year}\Ritmos\Drivers\df_ritmos_{year}.csv', index_col=0)
     
-    with open(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Drivers\driver_info_{year}.json', 'r') as f:
+    with open(rf'.\data\bueno\{year}\Ritmos\Drivers\driver_info_{year}.json', 'r') as f:
         driver_info = json.load(f)
     driver_palette = driver_info['driver_palette']
     driver_line = driver_info['driver_line']
@@ -574,20 +574,20 @@ def data_year_pace_team(year):
         mean_diff_df = pd.concat(mean_diff_list, axis=1)
         # Transpose dataframe
         df_ritmos = mean_diff_df.T  
-        df_ritmos.to_csv(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Teams\df_ritmos_{year}.csv')
+        df_ritmos.to_csv(rf'.\data\bueno\{year}\Ritmos\Teams\df_ritmos_{year}.csv')
         data = {
             "team_palette": team_palette
         }
 
-        with open(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Teams\team_info_{year}.json', 'w') as f:
+        with open(rf'.\data\bueno\{year}\Ritmos\Teams\team_info_{year}.json', 'w') as f:
             json.dump(data, f)
 
 #Plot the pace of the teams in each race
 
 def plot_year_pace_team(year):
-    df_ritmos = pd.read_csv(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Teams\df_ritmos_{year}.csv', index_col=0)
+    df_ritmos = pd.read_csv(rf'.\data\bueno\{year}\Ritmos\Teams\df_ritmos_{year}.csv', index_col=0)
         
-    with open(rf'D:\Cositas\Proyecto_UH\data\bueno\2023\Ritmos\Teams\team_info_{year}.json', 'r') as f:
+    with open(rf'.\data\bueno\{year}\Ritmos\Teams\team_info_{year}.json', 'r') as f:
         team_info = json.load(f)
     team_palette = team_info['team_palette']
 
