@@ -1,0 +1,59 @@
+/* Cambiar el color de fondo */
+body {
+    background-color: #f5f5f5;
+}
+
+@font-face {
+    font-family: 'F1 Regular';
+    src: url('D:\Cositas\Proyecto_UH\APP\Formula1-Regular_web_0.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'F1 Wide';
+    src: url('D:\Cositas\Proyecto_UH\APP\Formula1-Wide_web_0.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'F1 Bold';
+    src: url('D:\Cositas\Proyecto_UH\APP\Formula1-Bold_web_0.ttf') format('truetype');
+}
+
+
+h1{
+    font-family: 'F1 Bold', sans-serif;
+    font-weight: 700; /* Ajusta a 400 si prefieres un grosor menor */
+    color: #000; /* Cambia el color si es necesario */
+    text-transform: uppercase; /* Si deseas mantener el texto en mayúsculas */
+    margin-bottom: 10px;
+}
+
+
+h2{
+    font-family: 'F1 Wide', sans-serif;
+    font-weight: 700; /* Ajusta a 400 si prefieres un grosor menor */
+    color: #000; /* Cambia el color si es necesario */
+    text-transform: uppercase; /* Si deseas mantener el texto en mayúsculas */
+    margin-bottom: 10px;
+}
+
+h3, h4{
+    font-family: 'F1 Regular', sans-serif;
+    font-weight: 700; /* Ajusta a 400 si prefieres un grosor menor */
+    color: #000; /* Cambia el color si es necesario */
+    text-transform: uppercase; /* Si deseas mantener el texto en mayúsculas */
+    margin-bottom: 10px;
+}
+
+/* Cambiar la apariencia de la barra lateral */
+.sidebar .sidebar-content {
+    background-color: #222;
+    color: white;
+}
+
+/* Botones personalizados */
+button {
+    background-color: #FF4500 !important;
+    color: white !important;
+    border-radius: 5px;
+    border: none;
+}
