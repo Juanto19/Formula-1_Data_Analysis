@@ -29,12 +29,10 @@ def app():
 
     st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Piloto</h3>", unsafe_allow_html=True)
     fig_pace_drv = f.plot_year_pace_driver(season)
-    print(type(fig_pace_drv))
     st.plotly_chart(fig_pace_drv)
 
     st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Constructores</h3>", unsafe_allow_html=True)
     fig_pace_team = f.plot_year_pace_team(season)
-    # print(type(fig_pace_team))
     
     st.plotly_chart(fig_pace_team)
 

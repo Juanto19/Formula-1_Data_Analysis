@@ -5,10 +5,10 @@ body {
 
 @font-face {
     font-family: 'F1 Regular';
-    src: url('D:\Cositas\Proyecto_UH\APP\Formula1-Regular_web_0.ttf') format('truetype');
+    src: url('Formula1-Regular_web_0.ttf') format('truetype');
 }
 
-@font-face {
+/* @font-face {
     font-family: 'F1 Wide';
     src: url('D:\Cositas\Proyecto_UH\APP\Formula1-Wide_web_0.ttf') format('truetype');
 }
@@ -16,11 +16,11 @@ body {
 @font-face {
     font-family: 'F1 Bold';
     src: url('D:\Cositas\Proyecto_UH\APP\Formula1-Bold_web_0.ttf') format('truetype');
-}
+} */
 
 
 h1{
-    font-family: 'F1 Bold', sans-serif;
+    font-family: 'F1 Regular', sans-serif;
     font-weight: 700; /* Ajusta a 400 si prefieres un grosor menor */
     color: #000; /* Cambia el color si es necesario */
     text-transform: uppercase; /* Si deseas mantener el texto en mayúsculas */
@@ -29,7 +29,7 @@ h1{
 
 
 h2{
-    font-family: 'F1 Wide', sans-serif;
+    font-family: 'F1 Regular', sans-serif;
     font-weight: 700; /* Ajusta a 400 si prefieres un grosor menor */
     color: #000; /* Cambia el color si es necesario */
     text-transform: uppercase; /* Si deseas mantener el texto en mayúsculas */

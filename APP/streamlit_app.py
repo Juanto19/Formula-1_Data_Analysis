@@ -16,6 +16,9 @@ st.set_page_config(
     layout="wide",    
     initial_sidebar_state="collapsed"
 )
+# Aplicar el archivo CSS para la personalización del tema
+with open(r".\APP\style.css") as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # Título y subtítulo
 st.markdown("<h1 style='text-align: center;'>🏎️ Análisis de Datos de Fórmula 1</h1>", unsafe_allow_html=True)

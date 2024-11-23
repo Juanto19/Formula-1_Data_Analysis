@@ -684,7 +684,8 @@ def plot_length_circuit(circuits_info_df, event):
         plt.text(bar.get_width(), bar.get_y() + bar.get_height()/2, f' {str(int((bar.get_width())*1000))}', 
                  va='center', ha='left', color='black', fontsize=10)
     plt.gca().set_axisbelow(True)
-    # plt.show()
+    fig.patch.set_alpha(0)  
+    plt.gca().patch.set_alpha(0)
     return fig
 
 
@@ -708,6 +709,8 @@ def plot_mean_speed_circuit(circuits_info_df, event):
         plt.text(bar.get_width(), bar.get_y() + bar.get_height()/2, f' {bar.get_width().round(2)}', 
                  va='center', ha='left', color='black', fontsize=10)
     plt.gca().set_axisbelow(True)
+    fig.patch.set_alpha(0)  
+    plt.gca().patch.set_alpha(0)  
     # plt.show()
     return fig
     
@@ -732,7 +735,9 @@ def plot_number_of_laps_circuit(circuits_info_df, event):
                  va='center', ha='left', color='black', fontsize=10)
     plt.gca().set_axisbelow(True)
 
-    # plt.show()
+    fig.patch.set_alpha(0)  
+    plt.gca().patch.set_alpha(0)  
+
     return fig
 
 # Plot the number of turns of the circuits
@@ -756,7 +761,8 @@ def plot_number_of_turns_circuit(circuits_info_df, event):
                  va='center', ha='left', color='black', fontsize=10)
     plt.gca().set_axisbelow(True)
 
-    # plt.show()
+    fig.patch.set_alpha(0)  
+    plt.gca().patch.set_alpha(0)
     return fig
 
 # Plot the turns/km ratio of the circuits
@@ -780,7 +786,8 @@ def plot_turns_per_km_circuit(circuits_info_df, event):
                  va='center', ha='left', color='black', fontsize=10)
     plt.gca().set_axisbelow(True)
 
-    # plt.show()
+    fig.patch.set_alpha(0)  
+    plt.gca().patch.set_alpha(0)
     return fig
 
 
