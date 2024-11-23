@@ -647,19 +647,197 @@ def plot_year_pace_team(year):
 
 
 
+###################################################################################
+###################################################################################
+
+#GP FUNCTIONS
+
+#Calculate qualifying delta times for a given event
+def data_qualifying_times(year, event):
+    session = fastf1.get_session(year, event, 'Q')
+    session.load()
+
+    drivers = pd.unique(session.laps['Driver'])
+
+    list_fastest_laps = list()
+    for drv in drivers:
+        drvs_fastest_lap = session.laps.pick_driver(drv).pick_fastest()
+        list_fastest_laps.append(drvs_fastest_lap)
+    fastest_laps = Laps(list_fastest_laps) \
+        .sort_values(by='LapTime') \
+        .reset_index(drop=True)
+
+    pole_lap = fastest_laps.pick_fastest()
+    delta_times = fastest_laps[['LapTime', 'Driver', 'Team']].copy()
+    delta_times['LapTimeDelta'] = delta_times['LapTime'] - pole_lap['LapTime']
+    delta_times['LapTimeDelta'] = delta_times['LapTimeDelta'].dt.total_seconds()
+
+    driver_colors = {}
+    for _, lap in delta_times.iterlaps():
+        try:
+            color = fastf1.plotting.get_team_color(lap['Team'], session=session)
+        except:
+            continue
+        driver_colors[lap['Driver']] = color
+
+    pole_lap_info = {
+        'Driver': pole_lap['Driver'],
+        'LapTime': pole_lap['LapTime'].total_seconds()
+    }
+
+    complementary_info = {
+        'driver_colors': driver_colors,
+        'pole_lap': pole_lap_info
+    }
+
+    delta_times.to_csv(rf'.\data\bueno\{year}\qualifying_times\{event}_qualifying_times.csv')
+    with open(rf'.\data\bueno\{year}\qualifying_times\{event}_complementary_info.json', 'w') as f:
+        json.dump(complementary_info, f)
+
+#Plot qualifying delta times for a given event
+def plot_qualifying_times(year, event):
+    delta_times = pd.read_csv(rf'.\data\bueno\{year}\qualifying_times\{event}_qualifying_times.csv', index_col=0)
+
+    for _, row in delta_times.iterrows():
+        if row.isnull().any():
+            delta_times.drop(index=row.name, inplace=True)
+
+    with open(rf'.\data\bueno\{year}\qualifying_times\{event}_complementary_info.json', 'r') as f:
+        complementary_info = json.load(f)
+
+    pole_lap = complementary_info['pole_lap']
+    team_colors = complementary_info['driver_colors']
+    
+    fig, ax = plt.subplots(figsize=(16, 6.9))
+
+    ax.barh(delta_times.index, delta_times['LapTimeDelta'],
+            color=[team_colors[driver] for driver in delta_times['Driver']], edgecolor='black', linewidth=0.5)
+    ax.set_yticks(delta_times.index)
+    ax.set_yticklabels(delta_times['Driver'], color='black')
+    # ax.tick_params(axis='x', colors='black')
+    # show fastest at the top
+    ax.invert_yaxis()
+
+    # draw vertical lines behind the bars
+    ax.set_axisbelow(True)
+    ax.xaxis.grid(True, which='major', linestyle='--', color='black', zorder=-1000)
+
+    lap_time_string = strftimedelta(pd.to_timedelta(pole_lap['LapTime'], unit='s'), '%m:%s.%ms')
+
+    plt.suptitle(f"{event} {year} Qualifying\n"
+                 f"Fastest Lap: {lap_time_string} ({pole_lap['Driver']})",
+                 fontsize=22, color='black')
+    
+    for spine in ax.spines.values():
+        spine.set_linewidth(0.5)
+    ax.yaxis.grid(False)
+    
+    
+    ax.ticklabel_format(useOffset=False, style='plain', axis='x')
+    
+    # Format yticks as MM:SS.ms
+    def format_func(value, tick_number):
+        mins, secs = divmod(value, 60)
+        return f'{secs:05.3f}'
+
+    ax.xaxis.set_major_formatter(plt.FuncFormatter(format_func))
+    
+    ax.set_xlabel('Time difference (s)', color='black')
+    ax.patch.set_alpha(0.0)
+    plt.gca().patch.set_alpha(0)
+    plt.tight_layout()
+    return fig
+
+
+#Calculate position changes during the race
+def data_position_changes(year, event):
+    race = fastf1.get_session(year, event, 'R')
+    race.load(telemetry=False, weather=False)
+    # event_name = race.event['EventName']
+
+    drivers_style = {}
+    all_laps = []
+    for drv in race.drivers:
+        drv_laps = race.laps.pick_driver(drv)
+        final_positions = race.results['Position'].to_dict()
+        drv_laps['Position'] = drv_laps['Position'].apply(lambda x: final_positions[drv] if pd.isna(x) else x)
+        all_laps.append(drv_laps[['LapNumber', 'Position', 'Driver']])
+        abb = drv_laps['Driver'].unique()
+        if len(abb) < 1:
+            continue
+        else:
+            abb = abb[0]
+        try:
+            style = fastf1.plotting.get_driver_style(identifier=abb, style=['color', 'linestyle'], session=race)
+        except:
+            continue
+        drivers_style[drv] = style
+
+
+    final_positions = {race.get_driver(driver)['Abbreviation']: pos for driver, pos in final_positions.items()}
+    drivers_style = {race.get_driver(driver)['Abbreviation']: pos for driver, pos in drivers_style.items()}
+    all_laps_df = pd.concat(all_laps)
+    all_laps_df = all_laps_df.pivot(index='Driver', columns='LapNumber', values='Position')
+
+    for driver, row in all_laps_df.iterrows():
+        for lap in row.index:
+            if pd.isna(row[lap]):
+                all_laps_df.at[driver, lap] = final_positions[driver]
+
+    all_laps_df.to_csv(rf'.\data\bueno\{year}\pos_changes_race\df_position_{year}_{event}.csv')
+    with open(rf'.\data\bueno\{year}\pos_changes_race\driver_style_{year}_{event}.json', 'w') as f:
+        json.dump(drivers_style, f)
+
+#Plot position changes during the race
+def plot_position_changes(year, event):
+    df_position = pd.read_csv(rf'.\data\bueno\{year}\pos_changes_race\df_position_{year}_{event}.csv', index_col=0)
+    with open(rf'.\data\bueno\{year}\pos_changes_race\driver_style_{year}_{event}.json', 'r') as f:
+        driver_style = json.load(f)
+
+    total_drivers = len(df_position)
+    total_laps = len(df_position.columns)
+
+    fig, ax = plt.subplots(figsize=(18.0, 6.9))
+    fig.patch.set_facecolor('#f3f3f3')
+    ax.set_facecolor('#f3f3f3')
+    
+    for driver in df_position.index:
+        ax.plot(df_position.columns, df_position.loc[driver], label=driver, linewidth=3, **driver_style[driver])
+            
+    # Set plot limits and labels
+    ax.set_ylim([20.5, 0.5])
+    ax.set_yticks(range(1, total_drivers+1))
+    ax.set_xlim([0, total_laps + 1])
+    ax.set_xlabel('Lap', color='black')
+    ax.set_ylabel('Position', color='black')
+    ax.set_xticks([1] + list(range(5, total_laps + 1, 5)))
+    ax.tick_params(axis='x', colors='black')
+    ax.tick_params(axis='y', colors='black')
+
+    # Create a secondary y-axis
+    ax2 = ax.twinx()
+    ax2.set_ylim([20.5, 0.5])
+    ax2.set_yticks(range(1, total_drivers+1))
+    ax2.tick_params(axis='y', colors='black', direction='in', pad=-20)
+
+    ax.legend(bbox_to_anchor=(1.0, 1.02))
+    # Order the elements in the layer using the last column of the DataFrame as indicator of the order
+    order = df_position.iloc[:, -1].sort_values().index
+    handles, labels = ax.get_legend_handles_labels()
+    ordered_handles = [handles[labels.index(driver)] for driver in order]
+    ordered_labels = [labels[labels.index(driver)] for driver in order]
+    ax.legend(ordered_handles, ordered_labels, bbox_to_anchor=(1.0, 1.02))
+    plt.tight_layout()
+    ax.set_title(f'{year} {event} - Position Changes During the Race', fontsize=30, color='black')
+    
+    # Hide grid
+    ax.grid(False)
+    return fig
 
 
 
 
-
-
-
-
-
-
-
-
-
+###################################################################################
 ###################################################################################
 
 ## CIRCUIT FUNCTIONS
