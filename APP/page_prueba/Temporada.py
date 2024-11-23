@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 
 def app():
-    sys.path.append('d:/Cositas/Proyecto_UH/APP')
+    # sys.path.append('d:/Cositas/Proyecto_UH/APP')
     import functions as f
 
     # st.set_page_config(layout="wide")
