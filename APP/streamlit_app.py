@@ -25,7 +25,7 @@ st.markdown("<h1 style='text-align: center;'>🏎️ Análisis de Datos de Fórm
 st.markdown("<h3 style='text-align: center;'>Explora estadísticas avanzadas y visualizaciones detalladas del mundo de la F1.</h3>", unsafe_allow_html=True)
 
 # Imagen de fondo o representativa
-st.image(r".\APP\Customization\imagen_bienvenida.jpg", 
+st.image(r".\Customization\imagen_bienvenida.jpg", 
          caption="Bienvenido al análisis interactivo de la Fórmula 1",
          use_container_width =True, 
          width=1000)
