@@ -24,11 +24,11 @@ st.set_page_config(
 st.markdown("<h1 style='text-align: center;'>🏎️ Análisis de Datos de Fórmula 1</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center;'>Explora estadísticas avanzadas y visualizaciones detalladas del mundo de la F1.</h3>", unsafe_allow_html=True)
 
-# Imagen de fondo o representativa
-st.image(r".\APP\Customization\imagen_bienvenida.jpg", 
-         caption="Bienvenido al análisis interactivo de la Fórmula 1",
-         use_container_width =True, 
-         width=1000)
+# # Imagen de fondo o representativa
+# st.image(r".\APP\Customization\imagen_bienvenida.jpg", 
+#          caption="Bienvenido al análisis interactivo de la Fórmula 1",
+#          use_container_width =True, 
+#          width=1000)
 
 # Breve introducción
 st.write("""
