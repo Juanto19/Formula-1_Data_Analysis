@@ -935,7 +935,59 @@ def plot_pitstop_estrategy(year, event):
 
 
 
+#Calculate the telemetry data for the qualifying lap
 
+def data_overlap_telemetries(year, event):
+    session = fastf1.get_session(year, event, 'Q')
+    session.load()
+
+    drivers = session.laps.Driver.unique()
+    drivers_style = {}
+
+    telemetries = {}
+    laptimes = {}
+
+    for driver in drivers:
+        lap = session.laps.pick_driver(driver).pick_fastest()
+        laptime = lap['LapTime'].total_seconds()
+        laptime = pd.to_timedelta(laptime, unit='s')
+        minutes = int(laptime.total_seconds() // 60)
+        seconds = int(laptime.total_seconds() % 60)
+        milliseconds = int(laptime.microseconds // 1000)
+
+        # Format as Minutes:Seconds.Milliseconds
+        readable_format = f"{minutes:02}:{seconds:02}.{milliseconds:03}"
+
+        #obtain the Abbreaviation of the driver from the driver number
+        
+
+        laptimes[driver] = readable_format
+        telemetry = lap.get_car_data().add_distance()
+        style = fastf1.plotting.get_driver_style(identifier=driver, style=['color', 'linestyle'], session=session)
+        drivers_style[driver] = style
+
+        telemetries[driver] = telemetry[['Distance', 'Speed', 'Throttle', 'Brake']].copy()
+
+    telemetries_path = rf'.\data\bueno\{year}\telemetries\{event}_telemetries.json'
+    styles_path = rf'.\data\bueno\{year}\telemetries\{event}_styles.json'
+    laps_path = rf'.\data\bueno\{year}\telemetries\{event}_laptimes.json'
+
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(telemetries_path), exist_ok=True)
+
+    # Convert telemetries to a serializable format
+    telemetries_serializable = {driver: telemetry.to_dict(orient='list') for driver, telemetry in telemetries.items()}
+
+    # Save telemetries to json
+    with open(telemetries_path, 'w') as f:
+        json.dump(telemetries_serializable, f)
+
+    # Save styles to json
+    with open(styles_path, 'w') as f:
+        json.dump(drivers_style, f)
+
+    with open(laps_path, 'w') as f:
+        json.dump(laptimes, f)
 #Plot telemetry data for the qualifying lap
 def plot_overlap_telemetries(year, event):
     # Load telemetries from json
@@ -991,7 +1043,7 @@ def plot_overlap_telemetries(year, event):
               legendgroup=driver, showlegend=False , visible='legendonly'), row=3, col=1)
 
     fig.update_layout(height=1500, width=1200, title_text=f'Telemetry Comparison - {event} {year}', 
-                      showlegend=True, legend_title='Driver', template='plotly_white')
+                      title_x=0.5, showlegend=True, legend_title='Driver', template='plotly_white')
     fig.update_xaxes(title_text='Distance (m)')
     fig.update_yaxes(title_text='Speed (km/h)', row=1, col=1)
     fig.update_yaxes(title_text='Throttle (%)', row=2, col=1)
@@ -1000,6 +1052,72 @@ def plot_overlap_telemetries(year, event):
     fig.show()
 
 
+
+#Calculate the laptimes of the drivers in a given event
+def data_laptimes_race(year, event):
+    race = fastf1.get_session(year, event, 'R')
+    race.load()
+    drivers = race.laps.Driver.unique()
+
+    drivers_style = {}
+    all_lap_times = {}
+    for driver in drivers:
+        laps = race.laps.pick_driver(driver).pick_quicklaps(2).reset_index()
+        laps['LapTime']=laps['LapTime'].dt.total_seconds()
+        lap_times = laps[['LapNumber', 'LapTime']]
+        all_lap_times[driver] = lap_times
+        style = fastf1.plotting.get_driver_style(identifier=driver, style=['color', 'linestyle'], session=race)
+        drivers_style[driver] = style
+
+    lap_times_path = rf'.\data\bueno\{year}\laptimes\{event}_laptimes.json'
+    styles_path = rf'.\data\bueno\{year}\laptimes\{event}_styles.json'
+
+    # Convert telemetries to a serializable format
+    all_lap_times_serializable = {driver: lap_times.to_dict(orient='list') for driver, lap_times in all_lap_times.items()}
+
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(lap_times_path), exist_ok=True)
+
+    # Save telemetries to json
+    with open(lap_times_path, 'w') as f:
+        json.dump(all_lap_times_serializable, f)
+
+    # Save styles to json
+    with open(styles_path, 'w') as f:
+        json.dump(drivers_style, f)
+
+#Plot the laptimes of the drivers in a given event
+def plot_laptimes_race(year, event):
+    with open(rf'.\data\bueno\{year}\laptimes\{event}_laptimes.json', 'r') as f:
+        all_lap_times = json.load(f)
+
+    all_lap_times = {driver: pd.DataFrame(data) for driver, data in all_lap_times.items()}
+
+    with open(rf'.\data\bueno\{year}\laptimes\{event}_styles.json', 'r') as f:
+        drivers_style = json.load(f)
+
+    fig = px.line(width=1200, height=800) 
+
+    for driver, lap_times in all_lap_times.items():
+        style = drivers_style.get(driver, {})
+        color = style.get('color', 'black')
+        dash_style = 'dash' if style.get('linestyle') == 'dashed' else 'solid'
+        
+        fig.add_scatter(x=lap_times['LapNumber'], y=lap_times['LapTime'], mode='lines+markers', name=driver,
+                        line=dict(color=color, dash=dash_style), visible='legendonly')
+
+    fig.update_layout(title={'text': f"Lap Times Comparison for {event} - {year}",
+                             'x': 0.5,
+                             'xanchor': 'center'},
+                      xaxis_title="Lap Number",
+                      yaxis_title="Lap Time",
+                      template='plotly_white', legend_title='Driver')
+    
+    fig.update_xaxes(showgrid=False)
+    fig.update_yaxes(autorange='reversed')
+    return fig
+
+        
 ###################################################################################
 ###################################################################################
 
