@@ -657,6 +657,31 @@ def plot_year_pace_team(year):
 
 #GP FUNCTIONS
 
+#Get the results information for a given event
+def data_results_info(year, event):
+    race = fastf1.get_session(year, event, 'R')
+    race.load() 
+
+    results = pd.DataFrame(race.results)
+
+    results = results[['Abbreviation', 'Position', 'Time', 'Status', 'Points']]
+
+    results = results.rename(columns={'Abbreviation': 'Driver'})
+
+    results['Position'] = results['Position'].astype(int)
+    results['Points'] = results['Points'].astype(int)
+
+    results['Time'] = results['Time'].apply(lambda x: x if pd.isnull(x) else str(x).split(' ')[-1])
+    max_time = results['Time'][0]
+
+
+    for index, row in results.iterrows():
+        if pd.isna(row['Time']) or row['Time'] == max_time:
+            continue
+        else:
+            results.at[index, 'Time'] = '+' + str(row['Time'])
+    results.to_csv(rf'.\data\bueno\{year}\results_info\{event}_results.csv', index=False)
+
 #Calculate qualifying delta times for a given event
 def data_qualifying_times(year, event):
     session = fastf1.get_session(year, event, 'Q')
@@ -880,8 +905,8 @@ def plot_pitstop_estrategy(year, event):
 
     fig, ax = plt.subplots(figsize=(8, 10))
 
-    fig.patch.set_facecolor('#f4f4f4')
-    ax.set_facecolor('#f4f4f4')
+    # fig.patch.set_facecolor('#f4f4f4')
+    # ax.set_facecolor('#f4f4f4')
 
     for driver in drivers:
         driver_stints = stints.loc[stints["Driver"] == driver]
@@ -929,8 +954,8 @@ def plot_pitstop_estrategy(year, event):
     ax.tick_params(axis='y', colors='black')
 
     # plt.tight_layout()
-    plt.show()
-
+    fig.patch.set_alpha(0)  
+    plt.gca().patch.set_alpha(0)
     return fig
 
 
@@ -949,7 +974,7 @@ def data_overlap_telemetries(year, event):
 
     for driver in drivers:
         lap = session.laps.pick_driver(driver).pick_fastest()
-        laptime = lap['LapTime'].total_seconds()
+        laptime = lap['LapTime']
         laptime = pd.to_timedelta(laptime, unit='s')
         minutes = int(laptime.total_seconds() // 60)
         seconds = int(laptime.total_seconds() % 60)
