@@ -40,6 +40,67 @@ warnings.filterwarnings("ignore")
 
 #HEAD TO HEAD COMPARISONS
 
+#Obtain the results for a given year
+
+def get_season_results(year):
+    ergast = Ergast()
+    races = ergast.get_race_schedule(year)  
+    results = []
+    sprint_results = []
+
+    # For each race in the season
+    for rnd, race in races['raceName'].items():
+
+        # Get race results
+        temp = ergast.get_race_results(season=year, round=rnd + 1)
+        result = pd.DataFrame(temp.content[0])
+        
+        # If there is a sprint, get the results as well
+        sprint = ergast.get_sprint_results(season=year, round=rnd + 1)
+        if sprint.content and sprint.description['round'][0] == rnd + 1:
+            sprint_result = pd.DataFrame(sprint.content[0])
+            sprint_result['raceName'] = race
+            sprint_results.append(sprint_result)
+
+        result['raceName'] = race
+        results.append(result)
+
+    # Concatenate all results
+    results = pd.concat(results, ignore_index=True)
+    sprint_results = pd.concat(sprint_results, ignore_index=True) if sprint_results else pd.DataFrame()
+    results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_results.csv', index=False)
+    sprint_results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_sprint_results.csv', index=False)
+
+#Obtain the qualifying results for a given year
+def get_season_q_results(year):
+    ergast = Ergast()
+    races = ergast.get_race_schedule(year)  
+    q_results = []
+
+    # For each race in the season
+    for rnd, race in races['raceName'].items():
+
+        # Get results
+        temp = ergast.get_qualifying_results(season=year, round=rnd + 1)
+        q_result = pd.DataFrame(temp.content[0])
+        q_result['raceName'] = race
+        q_results.append(q_result)
+
+    # Concatenate all results
+    q_results = pd.concat(q_results, ignore_index=True)
+    q_results = q_results.copy()
+
+    q_results['Q1'] = pd.to_timedelta(q_results['Q1'])
+    q_results['Q2'] = pd.to_timedelta(q_results['Q2'])
+    q_results['Q3'] = pd.to_timedelta(q_results['Q3'])
+
+    q_results['Q1 (s)'] = q_results['Q1'].dt.total_seconds().round(3)
+    q_results['Q2 (s)'] = q_results['Q2'].dt.total_seconds().round(3)
+    q_results['Q3 (s)'] = q_results['Q3'].dt.total_seconds().round(3)
+    
+    q_results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_q_results.csv', index=False)
+
+
 #Filter the results to get only the drivers indicated
 
 def results_pair(results, drivers_to_comp):
@@ -657,20 +718,16 @@ def plot_year_pace_team(year):
 
 #GP FUNCTIONS
 
-#Get the results information for a given event
+#Get result data for the GP analysis
 def data_results_info(year, event):
-    race = fastf1.get_session(year, event, 'R')
-    race.load() 
+    all_results = pd.read_csv(rf'.\data\bueno\{year}\HtH\{year}_results.csv')
+    results = all_results[['driverCode', 'position', 'totalRaceTime', 'status', 'points']][all_results['raceName'] == event].reset_index(drop=True)
 
-    results = pd.DataFrame(race.results)
-
-    results = results[['Abbreviation', 'Position', 'Time', 'Status', 'Points']]
-
-    results = results.rename(columns={'Abbreviation': 'Driver'})
+    results = results.rename(columns={'driverCode': 'Driver', 'position':'Position', 
+                                      'totalRaceTime':'Time', 'status':'Status', 'points':'Points'})
 
     results['Position'] = results['Position'].astype(int)
     results['Points'] = results['Points'].astype(int)
-
     results['Time'] = results['Time'].apply(lambda x: x if pd.isnull(x) else str(x).split(' ')[-1])
     max_time = results['Time'][0]
 
@@ -681,6 +738,7 @@ def data_results_info(year, event):
         else:
             results.at[index, 'Time'] = '+' + str(row['Time'])
     results.to_csv(rf'.\data\bueno\{year}\results_info\{event}_results.csv', index=False)
+
 
 #Calculate qualifying delta times for a given event
 def data_qualifying_times(year, event):
@@ -865,6 +923,100 @@ def plot_position_changes(year, event):
     ax.grid(False)
     return fig
 
+
+#Calculate the relative distances of the drivers to the leader in each lap
+def data_relative_distances(year, event):
+    race = fastf1.get_session(year, event, 'R')
+    race.load()
+
+    # Preparar datos
+    laps = race.laps
+    drivers = race.drivers
+    event_name = race.event['EventName']
+    # Crear un diccionario para almacenar el tiempo de inicio del primer piloto de cada vuelta
+    first_driver_start_times = {}
+
+    # Iterar sobre cada vuelta
+    for lap in laps['LapNumber'].unique():
+        # Filtrar las vueltas del piloto y seleccionar la primera posición
+        first_driver_lap = laps[(laps['LapNumber'] == lap) & (laps['Position'] == 1)]
+
+        if not first_driver_lap.empty:
+            # Obtener el tiempo de inicio del primer piloto
+            start_time = pd.Timedelta(first_driver_lap['Time'].values[0]).total_seconds()
+            first_driver = first_driver_lap['DriverNumber'].values[0]
+            
+            first_driver_start_times[lap] = [start_time, first_driver]
+
+    # # Crear un DataFrame para almacenar las distancias de cada piloto al primero en cada vuelta
+    distances_to_first = pd.DataFrame(index=laps['LapNumber'].unique(), columns=drivers)
+    
+    # Iterar sobre cada vuelta y cada piloto
+    for lap in first_driver_start_times.keys():
+        for driver in drivers:
+            # Filtrar las vueltas del piloto y seleccionar la vuelta correspondiente
+            driver_lap = laps[(laps['LapNumber'] == lap) & (laps['DriverNumber'] == driver)]
+            if not driver_lap.empty:
+                # Obtener el tiempo de inicio del piloto
+                driver_start_time = pd.Timedelta(driver_lap['Time'].values[0]).total_seconds()
+                # Calcular la distancia al primer piloto en segundos
+                distance_to_first = driver_start_time - first_driver_start_times[lap][0]
+                distances_to_first.loc[lap, driver] = distance_to_first
+
+    # Convertir el DataFrame a tipo float
+    distances_to_first.astype(float)
+    # Change the column names from driverNumber to Driver (3 letter abbreviation)
+    driver_abbr = laps[['DriverNumber', 'Driver']].drop_duplicates().set_index('DriverNumber')['Driver'].to_dict()
+    distances_to_first.rename(columns=driver_abbr, inplace=True)
+
+    drivers_style = {}
+    for drv in distances_to_first.columns:
+        style = fastf1.plotting.get_driver_style(identifier=drv, style=['color', 'linestyle'], session=race)
+        drivers_style[drv] = style
+
+    distances_to_first.to_csv(rf'.\data\bueno\{year}\relative_distances\{event}_relative_distances.csv', index=True)
+
+    with open(rf'.\data\bueno\{year}\relative_distances\{event}_styles.json', 'w') as f:
+        json.dump(drivers_style, f)
+
+#Plot the relative distances of the drivers to the leader in each lap
+def plot_relative_distances(year, event):
+    distances_to_first = pd.read_csv(rf'.\data\bueno\{year}\relative_distances\{event}_relative_distances.csv', index_col=0)
+
+    with open(rf'.\data\bueno\{year}\relative_distances\{event}_styles.json', 'r') as f:
+        drivers_style = json.load(f)
+        fig = go.Figure()
+        fig.update_layout(width=1200, height=800)
+        for driver in distances_to_first.columns:
+            fig.add_trace(go.Scatter(
+                x=distances_to_first.index,
+                y=distances_to_first[driver],
+                mode='lines',
+                name=driver,
+                line=dict(color=drivers_style[driver]['color'], dash='dash' if drivers_style[driver]['linestyle'] == 'dashed' else 'solid'), 
+                visible='legendonly'
+            ))
+
+        fig.update_layout(
+            title=f'{year} {event} - Distance to First During the Race',
+            xaxis_title='Lap',
+            yaxis_title='Distance to First (s)',
+            legend_title='Driver',
+            yaxis=dict(autorange='reversed'),
+            template='plotly_white'
+        )
+
+    # fig.update_layout(
+    #     xaxis_title='Lap',
+    #     yaxis_title='Distance to First (s)',
+    #     legend_title='Driver',
+    #     yaxis=dict(autorange='reversed'),
+    #     template='plotly_white'
+    # )
+    # drivers_style = {driver: {'color': style['color'], 'linestyle': 'dash' if style['linestyle'] == 'dashed' else style['linestyle']} for driver, style in drivers_style.items()}
+    # for driver, style in drivers_style.items():
+    #     fig.update_traces(selector=dict(name=driver), line=dict(color=style['color'], dash=style['linestyle']))
+    return fig
 
 
 #Calculate the pitstop strategies of all drivers for a given event
@@ -1067,14 +1219,15 @@ def plot_overlap_telemetries(year, event):
               line=dict(color=color, dash=dash_style), 
               legendgroup=driver, showlegend=False , visible='legendonly'), row=3, col=1)
 
-    fig.update_layout(height=1500, width=1200, title_text=f'Telemetry Comparison - {event} {year}', 
+    fig.update_layout(height=1500, width=1200, title_text=f'Qualifying Lap Telemetry Comparison - {event} {year}', 
                       title_x=0.5, showlegend=True, legend_title='Driver', template='plotly_white')
     fig.update_xaxes(title_text='Distance (m)')
     fig.update_yaxes(title_text='Speed (km/h)', row=1, col=1)
     fig.update_yaxes(title_text='Throttle (%)', row=2, col=1)
     fig.update_yaxes(title_text='Brake (%)', row=3, col=1)
 
-    fig.show()
+    return fig
+
 
 
 

@@ -11,12 +11,37 @@ def app():
     # Título principal
     st.title("🏎️ Información de Circuitos de F1")
 
-    # Cargar los datos
-    circuit_data = pd.read_csv(r".\data\bueno\2023\circuits_info\circuits_2023_info.csv")
+    #Mostrar graficas
+    circuits_info = pd.read_csv(r".\data\bueno\2023\circuits_info\circuits_2023_info.csv")
+    circuitos = [
+        'Bahrain Grand Prix',
+        'Saudi Arabian Grand Prix',
+        'Australian Grand Prix',
+        'Azerbaijan Grand Prix',
+        'Miami Grand Prix',
+        'Monaco Grand Prix',
+        'Spanish Grand Prix',
+        'Canadian Grand Prix',
+        'Austrian Grand Prix',
+        'British Grand Prix',
+        'Hungarian Grand Prix',
+        'Belgian Grand Prix',
+        'Dutch Grand Prix',
+        'Italian Grand Prix',
+        'Singapore Grand Prix',
+        'Japanese Grand Prix',
+        'Qatar Grand Prix',
+        'United States Grand Prix',
+        'Mexico City Grand Prix',
+        'São Paulo Grand Prix',
+        'Las Vegas Grand Prix',
+        'Abu Dhabi Grand Prix'
+    ]
+
 
 
     # Renombrar columnas
-    circuit_data = circuit_data.rename(columns={
+    circuit_data = circuits_info.rename(columns={
         "Length (km)": "Longitud (km)",
         "Turns": "Curvas",
         "Laps": "Vueltas",
@@ -27,7 +52,7 @@ def app():
     # Selección de circuito
     selected_circuit = st.selectbox(
         "Selecciona un circuito para obtener más detalles:",
-        circuit_data["EventName"]
+        circuitos
     )
 
     # Filtrar los datos del circuito seleccionado
@@ -37,7 +62,7 @@ def app():
     st.header(f"Detalles del Circuito: {selected_circuit}")
     col1, col2 = st.columns(2)
     with col1:  
-        st.image(f".\APP\images\circuits\{selected_circuit.lower().replace(' ', '_')}_speed_track.png", caption="Trazado del Circuito")
+        st.image(f".\APP\images\circuits\{selected_circuit}_speed_track.png", caption="Trazado del Circuito")
     with col2:
         st.metric("Longitud", f"{circuit_details['Longitud (km)']} km")
         st.metric("Vueltas", circuit_details["Vueltas"])
@@ -45,8 +70,6 @@ def app():
         st.metric("Velocidad Media", f"{circuit_details['Velocidad Media (km/h)']} km/h")
         st.metric("Curvas/km", circuit_details["Curvas/km"])
 
-    #Mostrar graficas
-    circuits_info = pd.read_csv(r".\data\bueno\2023\circuits_info\circuits_2023_info.csv")
 
     col2_1, col2_2, col2_3 = st.columns([1,4,1])
 
