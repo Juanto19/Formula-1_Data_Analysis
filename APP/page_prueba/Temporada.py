@@ -15,28 +15,31 @@ def app():
     st.markdown(f"<h2 style='text-align: center;'>Resumen de la Temporada {season}</h2>", unsafe_allow_html=True)
 
     st.markdown("<h3 style='text-align: center;'>Clasificación de Pilotos</h3>", unsafe_allow_html=True)
-    st.image(
-        fr'.\APP\images\points_heatmaps\{season}_drivers_points_heatmap.png', 
+
+    col1, col2, col3 = st.columns([1,8,1])
+    with col2:
+        st.image(
+            fr'.\APP\images\points_heatmaps\{season}_drivers_points_heatmap.png', 
+                caption='Resumen de la Temporada 2023', 
+                width=1000)
+
+        st.markdown("<h3 style='text-align: center;'>Clasificación de Constructores</h3>", unsafe_allow_html=True)
+        st.image(
+            fr'.\APP\images\points_heatmaps\{season}_teams_points_heatmap.png', 
             caption='Resumen de la Temporada 2023', 
-            width=1000)
+            width=1000
+        )
 
-    st.markdown("<h3 style='text-align: center;'>Clasificación de Constructores</h3>", unsafe_allow_html=True)
-    st.image(
-        fr'.\APP\images\points_heatmaps\{season}_teams_points_heatmap.png', 
-        caption='Resumen de la Temporada 2023', 
-        width=1000
-    )
+        st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Piloto</h3>", unsafe_allow_html=True)
+        fig_pace_drv = f.plot_year_pace_driver(season)
+        st.plotly_chart(fig_pace_drv)
 
-    st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Piloto</h3>", unsafe_allow_html=True)
-    fig_pace_drv = f.plot_year_pace_driver(season)
-    st.plotly_chart(fig_pace_drv)
+        st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Constructores</h3>", unsafe_allow_html=True)
+        fig_pace_team = f.plot_year_pace_team(season)
+        
+        st.plotly_chart(fig_pace_team)
 
-    st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Constructores</h3>", unsafe_allow_html=True)
-    fig_pace_team = f.plot_year_pace_team(season)
-    
-    st.plotly_chart(fig_pace_team)
-
-    st.markdown("<h3 style='text-align: center;'>Comparativa de Pilotos</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center;'>Comparativa de Pilotos</h3>", unsafe_allow_html=True)
 
     year_results= pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_results.csv')
     # year_sprint_results = pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_sprint_results.csv')

@@ -476,7 +476,8 @@ def plot_comparisons(year, comparisons):
     axes[2, 2].set_ylim([min_y, max_y])
 
 
-
+    fig.patch.set_alpha(0)  
+    plt.gca().patch.set_alpha(0)
     fig.set_size_inches(15, 10)
     plt.tight_layout(rect=[0, 0, 1, 0.96])
     # plt.show()
