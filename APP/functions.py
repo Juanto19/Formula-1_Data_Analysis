@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 
 import json
+import os
+
 
 import seaborn as sns
 import matplotlib as mpl
@@ -9,8 +11,11 @@ import matplotlib.pyplot as plt
 from matplotlib import colormaps
 from matplotlib.collections import LineCollection
 from matplotlib.colors import LinearSegmentedColormap
+
 import plotly.express as px
 from plotly.io import show
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from timple.timedelta import strftimedelta
 import datetime
@@ -749,6 +754,7 @@ def plot_qualifying_times(year, event):
     return fig
 
 
+
 #Calculate position changes during the race
 def data_position_changes(year, event):
     race = fastf1.get_session(year, event, 'R')
@@ -835,6 +841,163 @@ def plot_position_changes(year, event):
     return fig
 
 
+
+#Calculate the pitstop strategies of all drivers for a given event
+def data_pitstop_estrategy(year, event):
+    race = fastf1.get_session(year, event, 'R')
+    race.load()
+    event_name = race.event['EventName']
+
+    laps = race.laps
+    drivers = race.drivers
+    drivers = [race.get_driver(driver)["Abbreviation"] for driver in drivers]
+    drivers_df = pd.DataFrame(drivers, columns=['Driver'])
+
+    stints = laps[["Driver", "Stint", "Compound", "LapNumber"]]
+    stints = stints.groupby(["Driver", "Stint", "Compound"])
+    stints = stints.count().reset_index()
+
+    stints = stints.rename(columns={"LapNumber": "StintLength"})
+
+    compound_colors = {}
+    for compound in stints["Compound"].unique():
+        compound_color = fastf1.plotting.get_compound_color(compound, session=race)
+        compound_colors[compound] = compound_color
+
+    stints.to_csv(rf'.\data\bueno\{year}\pitstop_strategies\{event_name}_pitstop_strategies.csv')
+    drivers_df.to_csv(rf'.\data\bueno\{year}\pitstop_strategies\{event_name}_positions.csv', index=False)
+    file_path = rf'.\data\bueno\{year}\pitstop_strategies\compound_colors.json'
+    if not os.path.exists(file_path):
+        with open(file_path, 'w') as f:
+            json.dump(compound_colors, f)
+
+#Plot the pitstop strategies of all drivers for a given event
+def plot_pitstop_estrategy(year, event):
+    stints = pd.read_csv(rf'.\data\bueno\{year}\pitstop_strategies\{event}_pitstop_strategies.csv')
+    drivers = pd.read_csv(rf'.\data\bueno\{year}\pitstop_strategies\{event}_positions.csv')['Driver']
+    with open(rf'.\data\bueno\{year}\pitstop_strategies\compound_colors.json', 'r') as f:
+        compound_colors = json.load(f)
+
+    fig, ax = plt.subplots(figsize=(8, 10))
+
+    fig.patch.set_facecolor('#f4f4f4')
+    ax.set_facecolor('#f4f4f4')
+
+    for driver in drivers:
+        driver_stints = stints.loc[stints["Driver"] == driver]
+
+        previous_stint_end = 0
+        for _, row in driver_stints.iterrows():
+            plt.barh(
+                y=driver,
+                width=row["StintLength"],
+                left=previous_stint_end,
+                color=compound_colors[row["Compound"]],
+                edgecolor="black",
+                fill=True
+            )
+
+            previous_stint_end += row["StintLength"]
+
+    plt.title(f"{year} {event} Strategies", color='black')
+    # Create custom legend
+    legend_elements = [plt.Line2D([0], [0], color=color, lw=4, label=compound) for compound, color in compound_colors.items()]
+    ax.legend(handles=legend_elements, title="Compound", bbox_to_anchor=(1.05, 1), loc='upper left')
+    # Change the background color of the legend
+    legend = ax.get_legend()
+    legend.get_frame().set_facecolor('#a7a7a7')
+
+    # Change the color of the legend text
+    for text in legend.get_texts():
+        text.set_color('black')
+
+    # Set frame thickness and color
+    for spine in ax.spines.values():
+        spine.set_linewidth(0.5)
+        spine.set_color('black')
+
+    plt.xlabel("Lap Number", color='black')
+    plt.ylabel("Driver", color='black')
+    plt.grid(False)
+    ax.invert_yaxis()
+
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    # ax.spines['left'].set_visible(False)
+
+    ax.tick_params(axis='x', colors='black')
+    ax.tick_params(axis='y', colors='black')
+
+    # plt.tight_layout()
+    plt.show()
+
+    return fig
+
+
+
+
+#Plot telemetry data for the qualifying lap
+def plot_overlap_telemetries(year, event):
+    # Load telemetries from json
+    with open(rf'.\data\bueno\{year}\telemetries\{event}_telemetries.json', 'r') as f:
+        telemetries = json.load(f)
+
+    # Convert telemetries back to DataFrame
+    telemetries = {driver: pd.DataFrame(data) for driver, data in telemetries.items()}
+
+    # Load styles from json
+    with open(rf'.\data\bueno\{year}\telemetries\{event}_styles.json', 'r') as f:
+        drivers_style = json.load(f)
+
+    with open(rf'.\data\bueno\{year}\telemetries\{event}_laptimes.json', 'r') as f:
+        laptimes = json.load(f)
+
+
+    # drivers_style = {driver: {'color': style['color'], 'linestyle': 'dash' if style['linestyle'] == 'dashed' else style['linestyle']} for driver, style in drivers_style.items()}
+
+    fig = make_subplots(rows=3, cols=1, shared_xaxes=True, vertical_spacing=0.1, subplot_titles=('Speed', 'Throttle', 'Brake'))
+
+    for driver, telemetry in telemetries.items():
+        style = drivers_style.get(driver, {})
+        color = style.get('color', 'black')  # Color por defecto: negro
+        dash_style = 'dash' if style.get('linestyle') == 'dashed' else 'solid'
+        telemetry = telemetries[driver]
+        
+        fig.add_trace(
+            go.Scatter(
+                x=[None], y=[None],  
+                mode='lines', name=str(str(driver) + ' (' + laptimes[driver] + ')'),  
+                line=dict(color=color, dash=dash_style),
+                legendgroup=driver, visible='legendonly' 
+            )
+        )
+        fig.add_trace(go.Scatter(
+            x=telemetry['Distance'], y=telemetry['Speed'],
+              mode='lines', name=f"{driver} Speed", 
+              line=dict(color=color, dash=dash_style), 
+              legendgroup=driver, showlegend=False, visible='legendonly'), row=1, col=1)
+        
+        
+        fig.add_trace(go.Scatter(
+            x=telemetry['Distance'], y=telemetry['Throttle'], 
+            mode='lines', name=f"{driver} Throttle", 
+              line=dict(color=color, dash=dash_style), 
+              legendgroup=driver, showlegend=False, visible='legendonly'), row=2, col=1)
+        
+        fig.add_trace(go.Scatter(
+            x=telemetry['Distance'], y=telemetry['Brake'], 
+            mode='lines', name=f"{driver} Brake", 
+              line=dict(color=color, dash=dash_style), 
+              legendgroup=driver, showlegend=False , visible='legendonly'), row=3, col=1)
+
+    fig.update_layout(height=1500, width=1200, title_text=f'Telemetry Comparison - {event} {year}', 
+                      showlegend=True, legend_title='Driver', template='plotly_white')
+    fig.update_xaxes(title_text='Distance (m)')
+    fig.update_yaxes(title_text='Speed (km/h)', row=1, col=1)
+    fig.update_yaxes(title_text='Throttle (%)', row=2, col=1)
+    fig.update_yaxes(title_text='Brake (%)', row=3, col=1)
+
+    fig.show()
 
 
 ###################################################################################
