@@ -30,16 +30,77 @@ def app():
             width=1000
         )
 
-        st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Piloto</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Piloto</h3>", unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([0.1,8,1.4])
+    with col2:
         fig_pace_drv = f.plot_year_pace_driver(season)
         st.plotly_chart(fig_pace_drv)
 
-        st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Constructores</h3>", unsafe_allow_html=True)
+    
+    with col3:
+        st.text("")
+        st.text("")
+        st.text("")
+        st.markdown("""
+    <div style="
+        background-color: #fffcce; 
+        border-left: 6px solid #d4c80a; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 16px;">
+        <strong>Info:</strong> Esta gráfica muestra el ritmo medio de cada piloto a lo largo de las distintas carreras. <br>
+                El ritmo se calcula como la diferencia de tiempo de un piloto con el tiempo medio en esa vuelta. <br>
+                Lo normales estar en un rango de -0.5 a 0.5 segundos. Fuera de este rango se considera un ritmo bueno (<-0.5) o malo (>+0.5) . <br>
+                Ritmos por encima de 1 segundo son muy malos y por debajo de -1 segundo son muy buenos.
+    </div>
+""", unsafe_allow_html=True)
+        
+
+
+    st.text("")
+    st.text("")
+
+    st.markdown("<h3 style='text-align: center;'>Comparativa del Ritmo por Constructores</h3>", unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([0.1,8,1.4])
+
+    with col2:
+
+
+        st.text("")
+        st.text("")
+
         fig_pace_team = f.plot_year_pace_team(season)
         
         st.plotly_chart(fig_pace_team)
+    
+    with col3:
 
-        st.markdown("<h3 style='text-align: center;'>Comparativa de Pilotos</h3>", unsafe_allow_html=True)
+        st.text("")
+        st.text("")
+        st.text("")
+        st.text("")
+
+        st.markdown("""
+    <div style="
+        background-color: #fffcce; 
+        border-left: 6px solid #d4c80a; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 16px;">
+        <strong>Info:</strong> Esta gráfica muestra el ritmo medio de cada equipo a lo largo de las distintas carreras. <br>
+                El ritmo se calcula como la diferencia de tiempo de un equipo (media de los pilotos) con el tiempo medio en esa vuelta.<br>
+                Lo normales estar en un rango de -0.5 a 0.5 segundos. Fuera de este rango se considera un ritmo bueno (<-0.5) o malo (>+0.5) . <br>
+                Ritmos por encima de 1 segundo son muy malos y por debajo de -1 segundo son muy buenos.
+    </div>
+""", unsafe_allow_html=True)
+
+        st.write("")
+        st.write("")
+
+
+    st.markdown("<h3 style='text-align: center;'>Comparativa de Pilotos</h3>", unsafe_allow_html=True)
 
     year_results= pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_results.csv')
     # year_sprint_results = pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_sprint_results.csv')

@@ -999,7 +999,11 @@ def plot_relative_distances(year, event):
             ))
 
         fig.update_layout(
-            title=f'{year} {event} - Distance to First During the Race',
+            title={
+            'text': f'{year} {event} - Distance to First During the Race',
+            'x': 0.5,
+            'xanchor': 'center'
+            },
             xaxis_title='Lap',
             yaxis_title='Distance to First (s)',
             legend_title='Driver',
@@ -1221,7 +1225,7 @@ def plot_overlap_telemetries(year, event):
               legendgroup=driver, showlegend=False , visible='legendonly'), row=3, col=1)
 
     fig.update_layout(height=1500, width=1200, title_text=f'Qualifying Lap Telemetry Comparison - {event} {year}', 
-                      title_x=0.5, showlegend=True, legend_title='Driver', template='plotly_white')
+                      title_x=0.3, showlegend=True, legend_title='Driver', template='plotly_white')
     fig.update_xaxes(title_text='Distance (m)')
     fig.update_yaxes(title_text='Speed (km/h)', row=1, col=1)
     fig.update_yaxes(title_text='Throttle (%)', row=2, col=1)

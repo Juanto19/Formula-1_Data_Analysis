@@ -51,8 +51,8 @@ def app():
     #     )
 
     # Información del GP seleccionado
-    st.markdown(f"<h2 style='text-align: center;'>📍 Información del {gran_premio} - {year}</h2>", unsafe_allow_html=True)
     if gran_premio != "":
+        st.markdown(f"<h2 style='text-align: center;'>📍 Información del {gran_premio} - {year}</h2>", unsafe_allow_html=True)
         col1, col2 = st.columns([1,1])
         with col1:
             st.write(f"""
@@ -73,7 +73,7 @@ def app():
             'Status': 'Resultado'
         })
         with col2:
-            st.table(data)
+            st.table(data.set_index('Posición'))
     
 
         # Gráfica (placeholder)
@@ -85,22 +85,86 @@ def app():
         fig_tiempos_quali = f.plot_qualifying_times(year, gran_premio)
         st.pyplot(fig_tiempos_quali)
 
+        st.markdown("""
+    <div style="
+        background-color: #fffcce; 
+        border-left: 6px solid #d4c80a; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 16px;">
+        <strong>Info:</strong> Se muestra la diferencia con respecto al tiempo de cualificación. <br>
+    </div>
+""", unsafe_allow_html=True)
+        
         fig_telemetry = f.plot_overlap_telemetries(year, gran_premio)
         st.plotly_chart(fig_telemetry)
 
+        st.markdown("""
+    <div style="
+        background-color: #fffcce; 
+        border-left: 6px solid #d4c80a; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 16px;">
+        <strong>Info:</strong> Información de la telemetría (velocidad, acelerador y freno) durante la vuelta de clasificación de cada piloto. <br>
+    </div>
+""", unsafe_allow_html=True)
 
         st.markdown("<h2 style='text-align: center;'>🏁 Carrera</h3>", unsafe_allow_html=True)
         fig_pos = f.plot_position_changes(year, gran_premio)
         st.pyplot(fig_pos)
 
+        st.markdown("""
+    <div style="
+        background-color: #fffcce; 
+        border-left: 6px solid #d4c80a; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 16px;">
+        <strong>Info:</strong> Avance de las posiciones en cada vuelta de la carrera. <br>
+    </div>
+""", unsafe_allow_html=True)
         fig_tiempo = f.plot_laptimes_race(year, gran_premio)
         st.plotly_chart(fig_tiempo)
+
+        st.markdown("""
+    <div style="
+        background-color: #fffcce; 
+        border-left: 6px solid #d4c80a; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 16px;">
+        <strong>Info:</strong> Comparación de los tiempos de cada vuelta a lo largo de la carrera. <br>
+    </div>
+""", unsafe_allow_html=True)
 
         fig_dist = f.plot_relative_distances(year, gran_premio)
         st.plotly_chart(fig_dist)
 
+        st.markdown("""
+    <div style="
+        background-color: #fffcce; 
+        border-left: 6px solid #d4c80a; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 16px;">
+        <strong>Info:</strong> Distancia (en segundos) con respecto al líder de la carrera en cada vuelta. <br>
+    </div>
+""", unsafe_allow_html=True)
+
         fig_pitstop = f.plot_pitstop_estrategy(year, gran_premio)
         st.pyplot(fig_pitstop)
+
+        st.markdown("""
+    <div style="
+        background-color: #fffcce; 
+        border-left: 6px solid #d4c80a; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 16px;">
+        <strong>Info:</strong> Estrategia de neumáticos de cada piloto. <br>
+    </div>
+""", unsafe_allow_html=True)
 
 
 

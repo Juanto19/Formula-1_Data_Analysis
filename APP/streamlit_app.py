@@ -26,16 +26,18 @@ st.markdown("<h3 style='text-align: center;'>Explora estadísticas avanzadas y v
 
 # Imagen de fondo o representativa
 st.image(r".\APP\Customization\imagen_bienvenida.jpg", 
-         caption="Bienvenido al análisis interactivo de la Fórmula 1",
          use_container_width =True, 
          width=1000)
 
 # Breve introducción
+st.write("")
+st.write("")
+
 st.write("""
 Esta aplicación te permite:
 - 📊 Analizar en detalle los resultados de cada Gran Premio.
-- 🏁 Explorar comparativas entre pilotos y equipos.
-- 📅 Consultar estadísticas históricas y actuales.
+- 📅 Explorar comparativas entre pilotos y equipos a lo largo de una temporada.
+- 🏟️ Visualizar los circuitos y consultar sus estadísticas.
 """)
 
 # Configurar estado inicial de la aplicación
@@ -55,16 +57,20 @@ def navigate_to(page):
 # }
 
 # Botones para navegación rápida
+st.write("")
+st.write("")   
+
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    if st.button("📊 Análisis de GP"):
-        navigate_to("📊 Análisis de GP")
+    if st.button("🏟️ Circuitos"):
+        navigate_to("🏟️ Circuitos")
 with col2:
     if st.button("📅 Temporadas"):
         navigate_to("📅 Temporadas")
 with col3:
-    if st.button("🏟️ Circuitos"):
-        navigate_to("🏟️ Circuitos")
+    if st.button("📊 Análisis de GP"):
+        navigate_to("📊 Análisis de GP")
+
 with col4:
     if st.button("📩 Contacto"):
         navigate_to("📩 Contacto")

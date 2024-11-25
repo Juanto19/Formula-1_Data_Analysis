@@ -15,7 +15,7 @@ This repository contains a Streamlit-based web application that visualizes and a
 ## How to Run Locally  
 1. Clone this repository:  
     ```bash
-    git clone https://github.com/your-username/F1-Data-Analysis.git
+    git clone https://github.com/Juanto19/ProyectoF1-v1.git
     cd F1-Data-Analysis
     ```
 2. Install the required dependencies:  
