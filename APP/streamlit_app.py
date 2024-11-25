@@ -65,11 +65,11 @@ with col1:
     if st.button("🏟️ Circuitos"):
         navigate_to("🏟️ Circuitos")
 with col2:
-    if st.button("📅 Temporadas"):
-        navigate_to("📅 Temporadas")
-with col3:
     if st.button("📊 Análisis de GP"):
         navigate_to("📊 Análisis de GP")
+with col3:
+    if st.button("📅 Temporadas"):
+        navigate_to("📅 Temporadas")
 
 with col4:
     if st.button("📩 Contacto"):
