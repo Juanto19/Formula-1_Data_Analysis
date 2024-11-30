@@ -698,6 +698,149 @@ def plot_year_pace_team(year):
 
 # HEATMAP FUNCTIONS
 
+#Heatmap with points per race of each driver (sns)
+def season_points_heatmap(year):
+    plt.style.use('tableau-colorblind10')
+    ergast = Ergast()
+    races = ergast.get_race_schedule(year)  # Races in year 2022
+    results = []
+
+    # For each race in the season
+    for rnd, race in races['raceName'].items():
+
+        temp = ergast.get_race_results(season=year, round=rnd + 1)
+        temp = temp.content[0]
+
+        # If there is a sprint, get the results as well
+        sprint = ergast.get_sprint_results(season=year, round=rnd + 1)
+        if sprint.content and sprint.description['round'][0] == rnd + 1:
+            temp = pd.merge(temp, sprint.content[0], on='driverCode', how='left')
+            # Add sprint points and race points to get the total
+            temp['points'] = temp['points_x'] + temp['points_y']
+            temp.drop(columns=['points_x', 'points_y'], inplace=True)
+
+        # Add round no. and grand prix name
+        temp['round'] = rnd + 1
+        temp['race'] = race.removesuffix(' Grand Prix')
+        temp = temp[['round', 'race', 'driverCode', 'points']]  # Keep useful cols.
+        results.append(temp)
+
+    # Append all races into a single dataframe
+    results = pd.concat(results)
+    races = results['race'].drop_duplicates()
+
+    results = results.pivot(index='driverCode', columns='round', values='points')
+
+    # Rank the drivers by their total points
+    results['Total'] = results.sum(axis=1)
+    results = results.sort_values(by='Total', ascending=False)
+
+    # Use race name, instead of round no., as column names
+    results.columns = list(races) + ['Total']
+
+    #Set cmap boundaries
+    zmin = results.iloc[:, :-1].min().min()
+    zmax = results.iloc[:, :-1].max().max()
+
+    # Define the colors
+    colors = ['#ffffff', '#ffbb92']
+
+    # Create the colormap
+    cmap = LinearSegmentedColormap.from_list('custom_gradient', colors)
+
+    # Create a heatmap using seaborn
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(results, annot=True, fmt=".0f", cmap=cmap, cbar=False, linewidths=.5, vmin=zmin, vmax=zmax)
+
+    # Set the title and labels
+    plt.title(f'{year} Driver Points by Race', fontsize=16)
+    plt.xlabel('Race', fontsize=12)
+    plt.ylabel('Driver', fontsize=12)
+
+    # Rotate the x-axis labels for better readability
+    plt.xticks(rotation=45, ha='right')
+
+    # Adjust layout to avoid clipping
+    plt.tight_layout()
+
+    plt.gcf().set_facecolor('#ffffff')
+
+    #Save the plot
+    plt.savefig(f'.\APP\images\{year}_drivers_points_heatmap.png')
+    # Show the plot
+    plt.show()
+
+
+def season_points_heatmap_by_team(year):
+    plt.style.use('seaborn-v0_8-bright')
+    ergast = Ergast()
+    races = ergast.get_race_schedule(year)
+    results = []
+
+    # For each race in the season
+    for rnd, race in races['raceName'].items():
+        temp = ergast.get_race_results(season=year, round=rnd + 1)
+        temp = temp.content[0]
+
+        # If there is a sprint, get the results as well
+        sprint = ergast.get_sprint_results(season=year, round=rnd + 1)
+        if sprint.content and sprint.description['round'][0] == rnd + 1:
+            temp = pd.merge(temp, sprint.content[0], on='constructorName', how='left')
+            # Add sprint points and race points to get the total
+            temp['points'] = temp['points_y'] + temp['points_y']
+            temp.drop(columns=['points_x', 'points_y'], inplace=True)
+
+        # Add round no. and grand prix name
+        temp['round'] = rnd + 1
+        temp['race'] = race.removesuffix(' Grand Prix')
+        temp = temp[['round', 'race', 'constructorName', 'points']]  # Keep useful cols.
+        results.append(temp)
+
+    results = pd.concat(results)
+    races = results['race'].drop_duplicates()
+
+    results.reset_index(drop=True, inplace=True)
+    
+    results_team = results.groupby(['constructorName', 'race'])['points'].sum().unstack().fillna(0)
+
+
+    # Rank the drivers by their total points
+    results_team['Total'] = results_team.sum(axis=1)
+    results_team = results_team.sort_values(by='Total', ascending=False)
+
+    # Use race name, instead of round no., as column names
+    results_team.columns = list(races) + ['Total']
+
+    #Set cmap boundaries
+    zmin = results_team.iloc[:, :-1].min().min()
+    zmax = results_team.iloc[:, :-1].max().max()
+
+    # Define the colors
+    colors = ['#ffffff', '#ffbb92']
+
+    # Create the colormap
+    cmap = LinearSegmentedColormap.from_list('custom_gradient', colors)
+
+    # Create a heatmap using seaborn
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(results_team, annot=True, fmt=".0f", cmap=cmap, cbar=False, linewidths=.5, vmin=zmin, vmax=zmax)
+
+    # Set the title and labels
+    plt.title(f'{year} Team Points by Race', fontsize=16)
+    plt.xlabel('Race', fontsize=12)
+    plt.ylabel('Team', fontsize=12)
+
+    # Rotate the x-axis labels for better readability
+    plt.xticks(rotation=45, ha='right')
+
+    # Adjust layout to avoid clipping
+    plt.tight_layout()
+    plt.gcf().set_facecolor('#ffffff')
+
+    plt.savefig(f'.\APP\images\points_heatmaps\{year}_teams_points_heatmap.png')
+
+    # Show the plot
+    plt.show()
 
 
 
