@@ -1,7 +1,7 @@
 import streamlit as st
 import sys
 
-sys.path.append(r'.\APP')
+# sys.path.append(r'.\APP')
 # APP\page_prueba\Grand_Prix.py
 from page_prueba.Grand_Prix import app as gran_premio_app
 from page_prueba.Temporada import app as temporadas_app
@@ -25,7 +25,7 @@ st.markdown("<h1 style='text-align: center;'>🏎️ Análisis de Datos de Fórm
 st.markdown("<h3 style='text-align: center;'>Explora estadísticas avanzadas y visualizaciones detalladas del mundo de la F1.</h3>", unsafe_allow_html=True)
 
 # Imagen de fondo o representativa
-st.image(r".\APP\Customization\imagen_bienvenida.jpg", 
+st.image(r"\APP\Customization\imagen_bienvenida.jpg", 
          use_container_width =True, 
          width=1000)
 
