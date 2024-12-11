@@ -68,6 +68,7 @@ def get_season_results(year):
     # Concatenate all results
     results = pd.concat(results, ignore_index=True)
     sprint_results = pd.concat(sprint_results, ignore_index=True) if sprint_results else pd.DataFrame()
+    os.makedirs(rf'.\data\bueno\{year}\HtH', exist_ok=True)
     results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_results.csv', index=False)
     sprint_results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_sprint_results.csv', index=False)
 
@@ -98,6 +99,7 @@ def get_season_q_results(year):
     q_results['Q2 (s)'] = q_results['Q2'].dt.total_seconds().round(3)
     q_results['Q3 (s)'] = q_results['Q3'].dt.total_seconds().round(3)
     
+    os.makedirs(rf'.\data\bueno\{year}\HtH', exist_ok=True)
     q_results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_q_results.csv', index=False)
 
 
@@ -1129,17 +1131,17 @@ def plot_relative_distances(year, event):
 
     with open(rf'.\data\bueno\{year}\relative_distances\{event}_styles.json', 'r') as f:
         drivers_style = json.load(f)
-        fig = go.Figure()
-        fig.update_layout(width=1200, height=800)
-        for driver in distances_to_first.columns:
-            fig.add_trace(go.Scatter(
-                x=distances_to_first.index,
-                y=distances_to_first[driver],
-                mode='lines',
-                name=driver,
-                line=dict(color=drivers_style[driver]['color'], dash='dash' if drivers_style[driver]['linestyle'] == 'dashed' else 'solid'), 
-                visible='legendonly'
-            ))
+    fig = go.Figure()
+    fig.update_layout(width=1200, height=800)
+    for driver in distances_to_first.columns:
+        fig.add_trace(go.Scatter(
+            x=distances_to_first.index,
+            y=distances_to_first[driver],
+            mode='lines',
+            name=driver,
+            line=dict(color=drivers_style[driver]['color'], dash='dash' if drivers_style[driver]['linestyle'] == 'dashed' else 'solid'), 
+            visible='legendonly'
+        ))
 
         fig.update_layout(
             title={
@@ -1200,7 +1202,7 @@ def data_pitstop_estrategy(year, event):
 def plot_pitstop_estrategy(year, event):
     stints = pd.read_csv(rf'.\data\bueno\{year}\pitstop_strategies\{event}_pitstop_strategies.csv')
     drivers = pd.read_csv(rf'.\data\bueno\{year}\pitstop_strategies\{event}_positions.csv')['Driver']
-    with open(rf'.\data\bueno\{year}\pitstop_strategies\compound_colors.json', 'r') as f:
+    with open(rf'.\data\bueno\Settings\compound_colors.json', 'r') as f:
         compound_colors = json.load(f)
 
     fig, ax = plt.subplots(figsize=(8, 10))
@@ -1261,7 +1263,6 @@ def plot_pitstop_estrategy(year, event):
 
 
 #Calculate the telemetry data for the qualifying lap
-
 def data_overlap_telemetries(year, event):
     session = fastf1.get_session(year, event, 'Q')
     session.load()
@@ -1313,6 +1314,7 @@ def data_overlap_telemetries(year, event):
 
     with open(laps_path, 'w') as f:
         json.dump(laptimes, f)
+
 #Plot telemetry data for the qualifying lap
 def plot_overlap_telemetries(year, event):
     # Load telemetries from json
@@ -1375,8 +1377,6 @@ def plot_overlap_telemetries(year, event):
     fig.update_yaxes(title_text='Brake (%)', row=3, col=1)
 
     return fig
-
-
 
 
 #Calculate the laptimes of the drivers in a given event

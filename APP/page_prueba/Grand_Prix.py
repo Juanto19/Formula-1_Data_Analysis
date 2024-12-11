@@ -11,9 +11,9 @@ def app():
     # Dropdown para seleccionar el año
     year = st.selectbox(
         "Selecciona un Año:",
-        [2023] # , "2022", "2021"
+        [2024, 2023] # , "2022", "2021"
     )
-    circuits_info = pd.read_csv(rf".\data\bueno\{year}\circuits_info\circuits_2023_info.csv")
+    circuits_info = pd.read_csv(rf".\data\bueno\2023\circuits_info\circuits_2023_info.csv")
 
     circuit_data = circuits_info.rename(columns={
         "Length (km)": "Longitud (km)",
@@ -25,7 +25,7 @@ def app():
     })
 
     # Dropdown para seleccionar el Gran Premio basado en el año seleccionado
-    if year == 2023:
+    if year == 2023 or year == 2024:
         gran_premio = st.selectbox(
             "Selecciona un Gran Premio:",
             [

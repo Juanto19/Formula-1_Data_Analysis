@@ -10,7 +10,7 @@ def app():
     st.markdown("<h1 style='text-align: center;'>📅 Análisis por Temporada</h1>", unsafe_allow_html=True)
     st.write("Explora los resultados y estadísticas completas de una temporada.")
     # Añade gráficos o tablas aquí.
-    season = st.selectbox("Selecciona la temporada", [2023, 2022, 2021])
+    season = st.selectbox("Selecciona la temporada", [2024, 2023, 2022, 2021])
 
     st.markdown(f"<h2 style='text-align: center;'>Resumen de la Temporada {season}</h2>", unsafe_allow_html=True)
 
@@ -19,14 +19,14 @@ def app():
     col1, col2, col3 = st.columns([1,8,1])
     with col2:
         st.image(
-            fr'.\APP\images\points_heatmaps\{season}_drivers_points_heatmap.png', 
-                caption='Resumen de la Temporada 2023', 
+            fr'./APP/images/points_heatmaps/{season}_drivers_points_heatmap.png', 
+                caption=f'Resumen de la Temporada {season}', 
                 width=1000)
 
         st.markdown("<h3 style='text-align: center;'>Clasificación de Constructores</h3>", unsafe_allow_html=True)
         st.image(
-            fr'.\APP\images\points_heatmaps\{season}_teams_points_heatmap.png', 
-            caption='Resumen de la Temporada 2023', 
+            fr'./APP/images/points_heatmaps/{season}_teams_points_heatmap.png', 
+            caption=f'Resumen de la Temporada {season}', 
             width=1000
         )
 

@@ -1,0 +1,14 @@
+#Para hacer un grafico que muestre el avance de los puntos a lo largo de una temporada (grafico de lineas)
+
+fig = go.Figure()
+
+fig = px.line(constructor_results, x="race", y="points", color='name', labels={
+    "points": "Points",
+    "race": "Race"
+}, title='Lap Times', color_discrete_map=constructor_color_map)
+fig.update_layout(title_text='<b>Constructor Championship Timeline</b>', titlefont = dict(
+         family = 'Arial, sans-serif',
+         size = 30
+      ), title_x=0.5)
+fig.update_layout(xaxis_range=[1,24])
+
