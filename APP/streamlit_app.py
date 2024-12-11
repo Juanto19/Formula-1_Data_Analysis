@@ -1,8 +1,8 @@
 import streamlit as st
 import sys
 
-sys.path.append(r'.\APP')
-# APP\page_prueba\Grand_Prix.py
+sys.path.append(r'./APP')
+# APP/page_prueba/Grand_Prix.py
 from page_prueba.Grand_Prix import app as gran_premio_app
 from page_prueba.Temporada import app as temporadas_app
 from page_prueba.Circuitos import app as circuitos_app
@@ -17,7 +17,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 # Aplicar el archivo CSS para la personalización del tema
-# with open(r".\APP\style.css") as f:
+# with open(r"./APP/style.css") as f:
 #     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # Título y subtítulo

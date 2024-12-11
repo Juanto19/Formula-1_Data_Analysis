@@ -102,9 +102,9 @@ def app():
 
     st.markdown("<h3 style='text-align: center;'>Comparativa de Pilotos</h3>", unsafe_allow_html=True)
 
-    year_results= pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_results.csv')
-    # year_sprint_results = pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_sprint_results.csv')
-    # year_q_results = pd.read_csv(fr'.\data\bueno\{season}\HtH\{season}_q_results.csv')
+    year_results= pd.read_csv(fr'./data/bueno/{season}/HtH/{season}_results.csv')
+    # year_sprint_results = pd.read_csv(fr'./data/bueno/{season}/HtH/{season}_sprint_results.csv')
+    # year_q_results = pd.read_csv(fr'./data/bueno/{season}/HtH/{season}_q_results.csv')
 
     drivers = list(year_results['driverCode'].value_counts().index[:19])
     driver_1 = st.selectbox("Selecciona el primer piloto", drivers)

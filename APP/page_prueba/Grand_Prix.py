@@ -13,7 +13,7 @@ def app():
         "Selecciona un Año:",
         [2024, 2023] # , "2022", "2021"
     )
-    circuits_info = pd.read_csv(rf".\data\bueno\2023\circuits_info\circuits_2023_info.csv")
+    circuits_info = pd.read_csv(rf"./data/bueno/2023/circuits_info/circuits_2023_info.csv")
 
     circuit_data = circuits_info.rename(columns={
         "Length (km)": "Longitud (km)",
@@ -61,9 +61,9 @@ def app():
             - **Fecha**: {circuit_data[circuit_data["EventName"] == gran_premio].iloc[0]["Date"]}  
             - **Vueltas**: {circuit_data[circuit_data["EventName"] == gran_premio].iloc[0]["Vueltas"]}  
             """)
-            st.image(f".\APP\images\circuits\{gran_premio}_track.png", caption="Trazado del Circuito")
+            st.image(f"./APP/images/circuits/{gran_premio}_track.png", caption="Trazado del Circuito")
 
-        data = pd.read_csv(rf".\data\bueno\{year}\results_info\{gran_premio}_results.csv")
+        data = pd.read_csv(rf"./data/bueno/{year}/results_info/{gran_premio}_results.csv")
         data = data.rename(columns={
             "Position": "Posición",
             "Driver": "Piloto",
