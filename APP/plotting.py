@@ -523,7 +523,7 @@ def plot_year_pace_driver(year):
 #Plot the pace of the teams in each race
 
 def plot_year_pace_team(year):
-    df_ritmos = pd.read_csv(rf'/data/bueno/{year}/Ritmos/Teams/df_ritmos_{year}.csv', index_col=0)
+    df_ritmos = pd.read_csv(rf'APP/data/bueno/{year}/Ritmos/Teams/df_ritmos_{year}.csv', index_col=0)
         
     with open(rf'APP/data/bueno/{year}/Ritmos/Teams/team_info_{year}.json', 'r') as f:
         team_info = json.load(f)
