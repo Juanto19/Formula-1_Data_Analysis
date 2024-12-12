@@ -11,7 +11,7 @@ def app():
     st.title("🏎️ Información de Circuitos de F1")
 
     #Mostrar graficas
-    circuits_info = pd.read_csv(r"./data/bueno/2023/circuits_info/circuits_2023_info.csv")
+    circuits_info = pd.read_csv(r"APP/data/bueno/2023/circuits_info/circuits_2023_info.csv")
     circuitos = [
         'Bahrain Grand Prix',
         'Saudi Arabian Grand Prix',
