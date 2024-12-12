@@ -19,13 +19,13 @@ def app():
     col1, col2, col3 = st.columns([1,8,1])
     with col2:
         st.image(
-            fr'./APP/images/points_heatmaps/{season}_drivers_points_heatmap.png', 
+            fr'APP/images/points_heatmaps/{season}_drivers_points_heatmap.png', 
                 caption=f'Resumen de la Temporada {season}', 
                 width=1000)
 
         st.markdown("<h3 style='text-align: center;'>Clasificación de Constructores</h3>", unsafe_allow_html=True)
         st.image(
-            fr'./APP/images/points_heatmaps/{season}_teams_points_heatmap.png', 
+            fr'APP/images/points_heatmaps/{season}_teams_points_heatmap.png', 
             caption=f'Resumen de la Temporada {season}', 
             width=1000
         )
@@ -102,9 +102,7 @@ def app():
 
     st.markdown("<h3 style='text-align: center;'>Comparativa de Pilotos</h3>", unsafe_allow_html=True)
 
-    year_results= pd.read_csv(fr'./data/bueno/{season}/HtH/{season}_results.csv')
-    # year_sprint_results = pd.read_csv(fr'./data/bueno/{season}/HtH/{season}_sprint_results.csv')
-    # year_q_results = pd.read_csv(fr'./data/bueno/{season}/HtH/{season}_q_results.csv')
+    year_results= pd.read_csv(fr'APP/data/bueno/{season}/HtH/{season}_results.csv')
 
     drivers = list(year_results['driverCode'].value_counts().index[:19])
     driver_1 = st.selectbox("Selecciona el primer piloto", drivers)
