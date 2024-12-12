@@ -1,0 +1,21 @@
+Driver,Position,Time,Status,Points
+VER,1,01:20:43.273000,Finished,25
+PER,2,+00:00:13.643100,Finished,18
+LEC,3,+00:00:18.639000,Finished,16
+PIA,4,+00:00:32.007000,Finished,12
+ALO,5,+00:00:35.759000,Finished,10
+RUS,6,+00:00:39.936000,Finished,8
+BEA,7,+00:00:42.679000,Finished,6
+NOR,8,+00:00:45.708000,Finished,4
+HAM,9,+00:00:47.391000,Finished,2
+HUL,10,+00:01:16.996000,Finished,1
+ALB,11,+00:01:28.354000,Finished,0
+MAG,12,+00:01:45.737300,Finished,0
+OCO,13,,+1 Lap,0
+SAR,14,,+1 Lap,0
+TSU,15,,+1 Lap,0
+RIC,16,,+1 Lap,0
+BOT,17,,+1 Lap,0
+ZHO,18,,+1 Lap,0
+STR,19,,Accident,0
+GAS,20,,Gearbox,0

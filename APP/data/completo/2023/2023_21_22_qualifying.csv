@@ -1,0 +1,41 @@
+,DriverNumber,Abbreviation,DriverId,TeamName,TeamColor,TeamId,Position,ClassifiedPosition,Q1,Q2,Q3,Time,Event_Name
+0,16,LEC,leclerc,Ferrari,F91536,ferrari,1.0,,0 days 00:01:33.617000,0 days 00:01:32.775000,0 days 00:01:32.726000,,Las Vegas Grand Prix
+1,55,SAI,sainz,Ferrari,F91536,ferrari,2.0,,0 days 00:01:33.851000,0 days 00:01:33.338000,0 days 00:01:32.770000,,Las Vegas Grand Prix
+2,1,VER,max_verstappen,Red Bull Racing,3671C6,red_bull,3.0,,0 days 00:01:34.190000,0 days 00:01:33.572000,0 days 00:01:33.104000,,Las Vegas Grand Prix
+3,63,RUS,russell,Mercedes,6CD3BF,mercedes,4.0,,0 days 00:01:34.137000,0 days 00:01:33.351000,0 days 00:01:33.112000,,Las Vegas Grand Prix
+4,10,GAS,gasly,Alpine,2293D1,alpine,5.0,,0 days 00:01:34.272000,0 days 00:01:33.494000,0 days 00:01:33.239000,,Las Vegas Grand Prix
+5,23,ALB,albon,Williams,37BEDD,williams,6.0,,0 days 00:01:34.634000,0 days 00:01:33.588000,0 days 00:01:33.323000,,Las Vegas Grand Prix
+6,2,SAR,sargeant,Williams,37BEDD,williams,7.0,,0 days 00:01:34.525000,0 days 00:01:33.733000,0 days 00:01:33.513000,,Las Vegas Grand Prix
+7,77,BOT,bottas,Alfa Romeo,C92D4B,alfa,8.0,,0 days 00:01:34.305000,0 days 00:01:33.809000,0 days 00:01:33.525000,,Las Vegas Grand Prix
+8,20,MAG,kevin_magnussen,Haas F1 Team,B6BABD,haas,9.0,,0 days 00:01:34.337000,0 days 00:01:33.664000,0 days 00:01:33.537000,,Las Vegas Grand Prix
+9,14,ALO,alonso,Aston Martin,358C75,aston_martin,10.0,,0 days 00:01:34.422000,0 days 00:01:33.617000,0 days 00:01:33.555000,,Las Vegas Grand Prix
+10,44,HAM,hamilton,Mercedes,6CD3BF,mercedes,11.0,,0 days 00:01:34.307000,0 days 00:01:33.837000,,,Las Vegas Grand Prix
+11,11,PER,perez,Red Bull Racing,3671C6,red_bull,12.0,,0 days 00:01:34.574000,0 days 00:01:33.855000,,,Las Vegas Grand Prix
+12,27,HUL,hulkenberg,Haas F1 Team,B6BABD,haas,13.0,,0 days 00:01:34.265000,0 days 00:01:33.979000,,,Las Vegas Grand Prix
+13,18,STR,stroll,Aston Martin,358C75,aston_martin,14.0,,0 days 00:01:34.504000,0 days 00:01:34.199000,,,Las Vegas Grand Prix
+14,3,RIC,ricciardo,AlphaTauri,5E8FAA,alphatauri,15.0,,0 days 00:01:34.683000,0 days 00:01:34.308000,,,Las Vegas Grand Prix
+15,4,NOR,norris,McLaren,F58020,mclaren,16.0,,0 days 00:01:34.703000,,,,Las Vegas Grand Prix
+16,31,OCO,ocon,Alpine,2293D1,alpine,17.0,,0 days 00:01:34.834000,,,,Las Vegas Grand Prix
+17,24,ZHO,zhou,Alfa Romeo,C92D4B,alfa,18.0,,0 days 00:01:34.849000,,,,Las Vegas Grand Prix
+18,81,PIA,piastri,McLaren,F58020,mclaren,19.0,,0 days 00:01:34.850000,,,,Las Vegas Grand Prix
+19,22,TSU,tsunoda,AlphaTauri,5E8FAA,alphatauri,20.0,,0 days 00:01:36.447000,,,,Las Vegas Grand Prix
+20,1,VER,max_verstappen,Red Bull Racing,3671C6,red_bull,1.0,,0 days 00:01:24.160000,0 days 00:01:23.740000,0 days 00:01:23.445000,,Abu Dhabi Grand Prix
+21,16,LEC,leclerc,Ferrari,F91536,ferrari,2.0,,0 days 00:01:24.459000,0 days 00:01:23.969000,0 days 00:01:23.584000,,Abu Dhabi Grand Prix
+22,81,PIA,piastri,McLaren,F58020,mclaren,3.0,,0 days 00:01:24.487000,0 days 00:01:24.278000,0 days 00:01:23.782000,,Abu Dhabi Grand Prix
+23,63,RUS,russell,Mercedes,6CD3BF,mercedes,4.0,,0 days 00:01:24.337000,0 days 00:01:24.013000,0 days 00:01:23.788000,,Abu Dhabi Grand Prix
+24,4,NOR,norris,McLaren,F58020,mclaren,5.0,,0 days 00:01:24.368000,0 days 00:01:23.920000,0 days 00:01:23.816000,,Abu Dhabi Grand Prix
+25,22,TSU,tsunoda,AlphaTauri,5E8FAA,alphatauri,6.0,,0 days 00:01:24.286000,0 days 00:01:24.207000,0 days 00:01:23.968000,,Abu Dhabi Grand Prix
+26,14,ALO,alonso,Aston Martin,358C75,aston_martin,7.0,,0 days 00:01:24.501000,0 days 00:01:24.131000,0 days 00:01:24.084000,,Abu Dhabi Grand Prix
+27,27,HUL,hulkenberg,Haas F1 Team,B6BABD,haas,8.0,,0 days 00:01:24.425000,0 days 00:01:24.213000,0 days 00:01:24.108000,,Abu Dhabi Grand Prix
+28,11,PER,perez,Red Bull Racing,3671C6,red_bull,9.0,,0 days 00:01:24.209000,0 days 00:01:24.116000,0 days 00:01:24.171000,,Abu Dhabi Grand Prix
+29,10,GAS,gasly,Alpine,2293D1,alpine,10.0,,0 days 00:01:24.600000,0 days 00:01:24.078000,0 days 00:01:24.548000,,Abu Dhabi Grand Prix
+30,44,HAM,hamilton,Mercedes,6CD3BF,mercedes,11.0,,0 days 00:01:24.437000,0 days 00:01:24.359000,,,Abu Dhabi Grand Prix
+31,31,OCO,ocon,Alpine,2293D1,alpine,12.0,,0 days 00:01:24.565000,0 days 00:01:24.391000,,,Abu Dhabi Grand Prix
+32,18,STR,stroll,Aston Martin,358C75,aston_martin,13.0,,0 days 00:01:24.405000,0 days 00:01:24.422000,,,Abu Dhabi Grand Prix
+33,23,ALB,albon,Williams,37BEDD,williams,14.0,,0 days 00:01:24.298000,0 days 00:01:24.439000,,,Abu Dhabi Grand Prix
+34,3,RIC,ricciardo,AlphaTauri,5E8FAA,alphatauri,15.0,,0 days 00:01:24.461000,0 days 00:01:24.442000,,,Abu Dhabi Grand Prix
+35,55,SAI,sainz,Ferrari,F91536,ferrari,16.0,,0 days 00:01:24.738000,,,,Abu Dhabi Grand Prix
+36,20,MAG,kevin_magnussen,Haas F1 Team,B6BABD,haas,17.0,,0 days 00:01:24.764000,,,,Abu Dhabi Grand Prix
+37,77,BOT,bottas,Alfa Romeo,C92D4B,alfa,18.0,,0 days 00:01:24.788000,,,,Abu Dhabi Grand Prix
+38,24,ZHO,zhou,Alfa Romeo,C92D4B,alfa,19.0,,0 days 00:01:25.159000,,,,Abu Dhabi Grand Prix
+39,2,SAR,sargeant,Williams,37BEDD,williams,20.0,,,,,,Abu Dhabi Grand Prix

@@ -1,0 +1,21 @@
+Driver,Position,Time,Status,Points
+PIA,1,01:38:01.989000,Finished,25
+NOR,2,+00:00:02.141000,Finished,18
+HAM,3,+00:00:14.880000,Finished,15
+LEC,4,+00:00:19.686000,Finished,12
+VER,5,+00:00:21.349000,Finished,10
+SAI,6,+00:00:23.073000,Finished,8
+PER,7,+00:00:39.792000,Finished,6
+RUS,8,+00:00:42.368000,Finished,5
+TSU,9,+00:01:17.259000,Finished,2
+STR,10,+00:01:17.976000,Finished,1
+ALO,11,+00:01:22.460000,Finished,0
+RIC,12,,+1 Lap,0
+HUL,13,,+1 Lap,0
+ALB,14,,+1 Lap,0
+MAG,15,,+1 Lap,0
+BOT,16,,+1 Lap,0
+SAR,17,,+1 Lap,0
+OCO,18,,+1 Lap,0
+ZHO,19,,+1 Lap,0
+GAS,20,,Hydraulics,0

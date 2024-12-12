@@ -1,0 +1,81 @@
+,DriverNumber,Abbreviation,DriverId,TeamName,TeamColor,TeamId,Position,ClassifiedPosition,Q1,Q2,Q3,Time,Event_Name
+0,1,VER,max_verstappen,Red Bull Racing,3671C6,red_bull,1.0,,0 days 00:01:25.007000,0 days 00:01:24.483000,0 days 00:01:23.778000,,Qatar Grand Prix
+1,63,RUS,russell,Mercedes,6CD3BF,mercedes,2.0,,0 days 00:01:25.334000,0 days 00:01:24.827000,0 days 00:01:24.219000,,Qatar Grand Prix
+2,44,HAM,hamilton,Mercedes,6CD3BF,mercedes,3.0,,0 days 00:01:26.076000,0 days 00:01:24.381000,0 days 00:01:24.305000,,Qatar Grand Prix
+3,14,ALO,alonso,Aston Martin,358C75,aston_martin,4.0,,0 days 00:01:25.223000,0 days 00:01:25.241000,0 days 00:01:24.369000,,Qatar Grand Prix
+4,16,LEC,leclerc,Ferrari,F91536,ferrari,5.0,,0 days 00:01:25.452000,0 days 00:01:25.079000,0 days 00:01:24.424000,,Qatar Grand Prix
+5,81,PIA,piastri,McLaren,F58020,mclaren,6.0,,0 days 00:01:25.266000,0 days 00:01:24.724000,0 days 00:01:24.540000,,Qatar Grand Prix
+6,10,GAS,gasly,Alpine,2293D1,alpine,7.0,,0 days 00:01:25.566000,0 days 00:01:24.918000,0 days 00:01:24.553000,,Qatar Grand Prix
+7,31,OCO,ocon,Alpine,2293D1,alpine,8.0,,0 days 00:01:25.711000,0 days 00:01:24.928000,0 days 00:01:24.763000,,Qatar Grand Prix
+8,77,BOT,bottas,Alfa Romeo,C92D4B,alfa,9.0,,0 days 00:01:26.038000,0 days 00:01:25.297000,0 days 00:01:25.058000,,Qatar Grand Prix
+9,4,NOR,norris,McLaren,F58020,mclaren,10.0,,0 days 00:01:25.131000,0 days 00:01:24.685000,,,Qatar Grand Prix
+10,22,TSU,tsunoda,AlphaTauri,5E8FAA,alphatauri,11.0,,0 days 00:01:26.058000,0 days 00:01:25.301000,,,Qatar Grand Prix
+11,55,SAI,sainz,Ferrari,F91536,ferrari,12.0,,0 days 00:01:25.808000,0 days 00:01:25.328000,,,Qatar Grand Prix
+12,11,PER,perez,Red Bull Racing,3671C6,red_bull,13.0,,0 days 00:01:25.991000,0 days 00:01:25.462000,,,Qatar Grand Prix
+13,23,ALB,albon,Williams,37BEDD,williams,14.0,,0 days 00:01:26.118000,0 days 00:01:25.707000,,,Qatar Grand Prix
+14,27,HUL,hulkenberg,Haas F1 Team,B6BABD,haas,15.0,,0 days 00:01:25.904000,0 days 00:01:25.783000,,,Qatar Grand Prix
+15,2,SAR,sargeant,Williams,37BEDD,williams,16.0,,0 days 00:01:26.210000,,,,Qatar Grand Prix
+16,18,STR,stroll,Aston Martin,358C75,aston_martin,17.0,,0 days 00:01:26.345000,,,,Qatar Grand Prix
+17,40,LAW,lawson,AlphaTauri,5E8FAA,alphatauri,18.0,,0 days 00:01:26.635000,,,,Qatar Grand Prix
+18,20,MAG,kevin_magnussen,Haas F1 Team,B6BABD,haas,19.0,,0 days 00:01:27.046000,,,,Qatar Grand Prix
+19,24,ZHO,zhou,Alfa Romeo,C92D4B,alfa,20.0,,0 days 00:01:27.432000,,,,Qatar Grand Prix
+20,16,LEC,leclerc,Ferrari,F91536,ferrari,1.0,,0 days 00:01:36.061000,0 days 00:01:35.004000,0 days 00:01:34.723000,,United States Grand Prix
+21,4,NOR,norris,McLaren,F58020,mclaren,2.0,,0 days 00:01:35.110000,0 days 00:01:35.441000,0 days 00:01:34.853000,,United States Grand Prix
+22,44,HAM,hamilton,Mercedes,6CD3BF,mercedes,3.0,,0 days 00:01:35.091000,0 days 00:01:35.240000,0 days 00:01:34.862000,,United States Grand Prix
+23,55,SAI,sainz,Ferrari,F91536,ferrari,4.0,,0 days 00:01:35.824000,0 days 00:01:35.302000,0 days 00:01:34.945000,,United States Grand Prix
+24,63,RUS,russell,Mercedes,6CD3BF,mercedes,5.0,,0 days 00:01:36.165000,0 days 00:01:35.606000,0 days 00:01:35.079000,,United States Grand Prix
+25,1,VER,max_verstappen,Red Bull Racing,3671C6,red_bull,6.0,,0 days 00:01:35.346000,0 days 00:01:35.008000,0 days 00:01:35.081000,,United States Grand Prix
+26,10,GAS,gasly,Alpine,2293D1,alpine,7.0,,0 days 00:01:36.158000,0 days 00:01:35.496000,0 days 00:01:35.089000,,United States Grand Prix
+27,31,OCO,ocon,Alpine,2293D1,alpine,8.0,,0 days 00:01:36.131000,0 days 00:01:35.413000,0 days 00:01:35.154000,,United States Grand Prix
+28,11,PER,perez,Red Bull Racing,3671C6,red_bull,9.0,,0 days 00:01:35.989000,0 days 00:01:35.679000,0 days 00:01:35.173000,,United States Grand Prix
+29,81,PIA,piastri,McLaren,F58020,mclaren,10.0,,0 days 00:01:36.064000,0 days 00:01:35.576000,0 days 00:01:35.467000,,United States Grand Prix
+30,22,TSU,tsunoda,AlphaTauri,5E8FAA,alphatauri,11.0,,0 days 00:01:35.913000,0 days 00:01:35.697000,,,United States Grand Prix
+31,24,ZHO,zhou,Alfa Romeo,C92D4B,alfa,12.0,,0 days 00:01:36.052000,0 days 00:01:35.698000,,,United States Grand Prix
+32,77,BOT,bottas,Alfa Romeo,C92D4B,alfa,13.0,,0 days 00:01:36.082000,0 days 00:01:35.858000,,,United States Grand Prix
+33,20,MAG,kevin_magnussen,Haas F1 Team,B6BABD,haas,14.0,,0 days 00:01:36.009000,0 days 00:01:35.880000,,,United States Grand Prix
+34,3,RIC,ricciardo,AlphaTauri,5E8FAA,alphatauri,15.0,,0 days 00:01:36.213000,0 days 00:01:35.974000,,,United States Grand Prix
+35,27,HUL,hulkenberg,Haas F1 Team,B6BABD,haas,16.0,,0 days 00:01:36.235000,,,,United States Grand Prix
+36,14,ALO,alonso,Aston Martin,358C75,aston_martin,17.0,,0 days 00:01:36.268000,,,,United States Grand Prix
+37,23,ALB,albon,Williams,37BEDD,williams,18.0,,0 days 00:01:36.315000,,,,United States Grand Prix
+38,18,STR,stroll,Aston Martin,358C75,aston_martin,19.0,,0 days 00:01:36.589000,,,,United States Grand Prix
+39,2,SAR,sargeant,Williams,37BEDD,williams,20.0,,0 days 00:01:36.827000,,,,United States Grand Prix
+40,16,LEC,leclerc,Ferrari,F91536,ferrari,1.0,,0 days 00:01:18.401000,0 days 00:01:17.901000,0 days 00:01:17.166000,,Mexico City Grand Prix
+41,55,SAI,sainz,Ferrari,F91536,ferrari,2.0,,0 days 00:01:18.755000,0 days 00:01:18.382000,0 days 00:01:17.233000,,Mexico City Grand Prix
+42,1,VER,max_verstappen,Red Bull Racing,3671C6,red_bull,3.0,,0 days 00:01:18.099000,0 days 00:01:17.625000,0 days 00:01:17.263000,,Mexico City Grand Prix
+43,3,RIC,ricciardo,AlphaTauri,5E8FAA,alphatauri,4.0,,0 days 00:01:18.341000,0 days 00:01:17.706000,0 days 00:01:17.382000,,Mexico City Grand Prix
+44,11,PER,perez,Red Bull Racing,3671C6,red_bull,5.0,,0 days 00:01:18.553000,0 days 00:01:18.124000,0 days 00:01:17.423000,,Mexico City Grand Prix
+45,44,HAM,hamilton,Mercedes,6CD3BF,mercedes,6.0,,0 days 00:01:18.677000,0 days 00:01:17.571000,0 days 00:01:17.454000,,Mexico City Grand Prix
+46,81,PIA,piastri,McLaren,F58020,mclaren,7.0,,0 days 00:01:18.241000,0 days 00:01:17.874000,0 days 00:01:17.623000,,Mexico City Grand Prix
+47,63,RUS,russell,Mercedes,6CD3BF,mercedes,8.0,,0 days 00:01:18.893000,0 days 00:01:17.673000,0 days 00:01:17.674000,,Mexico City Grand Prix
+48,77,BOT,bottas,Alfa Romeo,C92D4B,alfa,9.0,,0 days 00:01:18.429000,0 days 00:01:18.016000,0 days 00:01:18.032000,,Mexico City Grand Prix
+49,24,ZHO,zhou,Alfa Romeo,C92D4B,alfa,10.0,,0 days 00:01:19.016000,0 days 00:01:18.440000,0 days 00:01:18.050000,,Mexico City Grand Prix
+50,10,GAS,gasly,Alpine,2293D1,alpine,11.0,,0 days 00:01:18.945000,0 days 00:01:18.521000,,,Mexico City Grand Prix
+51,27,HUL,hulkenberg,Haas F1 Team,B6BABD,haas,12.0,,0 days 00:01:18.969000,0 days 00:01:18.524000,,,Mexico City Grand Prix
+52,14,ALO,alonso,Aston Martin,358C75,aston_martin,13.0,,0 days 00:01:18.848000,0 days 00:01:18.738000,,,Mexico City Grand Prix
+53,23,ALB,albon,Williams,37BEDD,williams,14.0,,0 days 00:01:18.828000,0 days 00:01:19.147000,,,Mexico City Grand Prix
+54,22,TSU,tsunoda,AlphaTauri,5E8FAA,alphatauri,15.0,,0 days 00:01:18.890000,,,,Mexico City Grand Prix
+55,31,OCO,ocon,Alpine,2293D1,alpine,16.0,,0 days 00:01:19.080000,,,,Mexico City Grand Prix
+56,20,MAG,kevin_magnussen,Haas F1 Team,B6BABD,haas,17.0,,0 days 00:01:19.163000,,,,Mexico City Grand Prix
+57,18,STR,stroll,Aston Martin,358C75,aston_martin,18.0,,0 days 00:01:19.227000,,,,Mexico City Grand Prix
+58,4,NOR,norris,McLaren,F58020,mclaren,19.0,,0 days 00:01:21.554000,,,,Mexico City Grand Prix
+59,2,SAR,sargeant,Williams,37BEDD,williams,20.0,,,,,,Mexico City Grand Prix
+60,1,VER,max_verstappen,Red Bull Racing,3671C6,red_bull,1.0,,0 days 00:01:10.436000,0 days 00:01:10.162000,0 days 00:01:10.727000,,São Paulo Grand Prix
+61,16,LEC,leclerc,Ferrari,F91536,ferrari,2.0,,0 days 00:01:10.472000,0 days 00:01:10.303000,0 days 00:01:11.021000,,São Paulo Grand Prix
+62,18,STR,stroll,Aston Martin,358C75,aston_martin,3.0,,0 days 00:01:10.551000,0 days 00:01:10.375000,0 days 00:01:11.344000,,São Paulo Grand Prix
+63,14,ALO,alonso,Aston Martin,358C75,aston_martin,4.0,,0 days 00:01:10.557000,0 days 00:01:10.237000,0 days 00:01:11.387000,,São Paulo Grand Prix
+64,44,HAM,hamilton,Mercedes,6CD3BF,mercedes,5.0,,0 days 00:01:10.604000,0 days 00:01:10.266000,0 days 00:01:11.469000,,São Paulo Grand Prix
+65,63,RUS,russell,Mercedes,6CD3BF,mercedes,6.0,,0 days 00:01:10.340000,0 days 00:01:10.316000,0 days 00:01:11.590000,,São Paulo Grand Prix
+66,4,NOR,norris,McLaren,F58020,mclaren,7.0,,0 days 00:01:10.623000,0 days 00:01:10.021000,0 days 00:01:11.987000,,São Paulo Grand Prix
+67,55,SAI,sainz,Ferrari,F91536,ferrari,8.0,,0 days 00:01:10.624000,0 days 00:01:10.254000,0 days 00:01:11.989000,,São Paulo Grand Prix
+68,11,PER,perez,Red Bull Racing,3671C6,red_bull,9.0,,0 days 00:01:10.668000,0 days 00:01:10.219000,0 days 00:01:12.321000,,São Paulo Grand Prix
+69,81,PIA,piastri,McLaren,F58020,mclaren,10.0,,0 days 00:01:10.519000,0 days 00:01:10.330000,,,São Paulo Grand Prix
+70,27,HUL,hulkenberg,Haas F1 Team,B6BABD,haas,11.0,,0 days 00:01:10.475000,0 days 00:01:10.547000,,,São Paulo Grand Prix
+71,31,OCO,ocon,Alpine,2293D1,alpine,12.0,,0 days 00:01:10.763000,0 days 00:01:10.562000,,,São Paulo Grand Prix
+72,10,GAS,gasly,Alpine,2293D1,alpine,13.0,,0 days 00:01:10.793000,0 days 00:01:10.567000,,,São Paulo Grand Prix
+73,20,MAG,kevin_magnussen,Haas F1 Team,B6BABD,haas,14.0,,0 days 00:01:10.602000,0 days 00:01:10.723000,,,São Paulo Grand Prix
+74,23,ALB,albon,Williams,37BEDD,williams,15.0,,0 days 00:01:10.621000,0 days 00:01:10.840000,,,São Paulo Grand Prix
+75,22,TSU,tsunoda,AlphaTauri,5E8FAA,alphatauri,16.0,,0 days 00:01:10.837000,,,,São Paulo Grand Prix
+76,3,RIC,ricciardo,AlphaTauri,5E8FAA,alphatauri,17.0,,0 days 00:01:10.843000,,,,São Paulo Grand Prix
+77,77,BOT,bottas,Alfa Romeo,C92D4B,alfa,18.0,,0 days 00:01:10.955000,,,,São Paulo Grand Prix
+78,2,SAR,sargeant,Williams,37BEDD,williams,19.0,,0 days 00:01:11.035000,,,,São Paulo Grand Prix
+79,24,ZHO,zhou,Alfa Romeo,C92D4B,alfa,20.0,,0 days 00:01:11.275000,,,,São Paulo Grand Prix
