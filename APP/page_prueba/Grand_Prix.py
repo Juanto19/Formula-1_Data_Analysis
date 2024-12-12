@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 def app():
-    import APP.plotting as f
+    import plotting as f
     st.markdown("<h1 style='text-align: center;'>📊 Análisis de un Gran Premio</h1>", unsafe_allow_html=True)
     st.write("Selecciona un Gran Premio para ver el análisis detallado.")
     # Puedes añadir widgets como selectboxes aquí.
