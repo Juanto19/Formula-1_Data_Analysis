@@ -4,7 +4,7 @@ import sys
 
 def app():
     # sys.path.append('d:/Cositas/Proyecto_UH/APP')
-    import functions as f
+    import plotting as f
 
     # st.set_page_config(layout="wide")
     st.markdown("<h1 style='text-align: center;'>📅 Análisis por Temporada</h1>", unsafe_allow_html=True)
