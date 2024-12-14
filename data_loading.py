@@ -71,10 +71,10 @@ def get_season_results(year):
     results = pd.concat(results, ignore_index=True)
     sprint_results = pd.concat(sprint_results, ignore_index=True) if sprint_results else pd.DataFrame()
     
-    os.makedirs(rf'.\data\bueno\{year}\HtH', exist_ok=True)
+    os.makedirs(rf'.\APP\data\bueno\{year}\HtH', exist_ok=True)
 
-    results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_results.csv', index=False)
-    sprint_results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_sprint_results.csv', index=False)
+    results.to_csv(rf'.\APP\data\bueno\{year}\HtH\{year}_results.csv', index=False)
+    sprint_results.to_csv(rf'.\APP\data\bueno\{year}\HtH\{year}_sprint_results.csv', index=False)
 
 #Obtain the qualifying results for a given year
 def get_season_q_results(year):
@@ -103,8 +103,8 @@ def get_season_q_results(year):
     q_results['Q2 (s)'] = q_results['Q2'].dt.total_seconds().round(3)
     q_results['Q3 (s)'] = q_results['Q3'].dt.total_seconds().round(3)
     
-    os.makedirs(rf'.\data\bueno\{year}\HtH', exist_ok=True)
-    q_results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_q_results.csv', index=False)
+    os.makedirs(rf'.\APP\data\bueno\{year}\HtH', exist_ok=True)
+    q_results.to_csv(rf'.\APP\data\bueno\{year}\HtH\{year}_q_results.csv', index=False)
 
 ###################################################################################
 
@@ -181,18 +181,18 @@ def data_year_pace_driver(year):
         elif driver_number[driver] >= 3:
             driver_line[driver] = 'dashdot'
 
-    os.makedirs(rf'.\data\bueno\{year}\Ritmos', exist_ok=True)
-    os.makedirs(rf'.\data\bueno\{year}\Ritmos\Drivers', exist_ok=True)
+    os.makedirs(rf'.\APP\data\bueno\{year}\Ritmos', exist_ok=True)
+    os.makedirs(rf'.\APP\data\bueno\{year}\Ritmos\Drivers', exist_ok=True)
 
     # Transpose dataframe
     df_ritmos = mean_diff_df.T  
-    df_ritmos.to_csv(rf'.\data\bueno\{year}\Ritmos\Drivers\df_ritmos_{year}.csv')
+    df_ritmos.to_csv(rf'.\APP\data\bueno\{year}\Ritmos\Drivers\df_ritmos_{year}.csv')
     data = {
         "driver_palette": driver_palette,
         "driver_line": driver_line
     }
 
-    with open(rf'.\data\bueno\{year}\Ritmos\Drivers\driver_info_{year}.json', 'w') as f:
+    with open(rf'.\APP\data\bueno\{year}\Ritmos\Drivers\driver_info_{year}.json', 'w') as f:
         json.dump(data, f)
 
 
@@ -238,15 +238,15 @@ def data_year_pace_team(year):
         df_ritmos = mean_diff_df.T  
         
         
-        os.makedirs(rf'.\data\bueno\{year}\Ritmos', exist_ok=True)
-        os.makedirs(rf'.\data\bueno\{year}\Ritmos\Teams', exist_ok=True)
+        os.makedirs(rf'.\APP\data\bueno\{year}\Ritmos', exist_ok=True)
+        os.makedirs(rf'.\APP\data\bueno\{year}\Ritmos\Teams', exist_ok=True)
 
-        df_ritmos.to_csv(rf'.\data\bueno\{year}\Ritmos\Teams\df_ritmos_{year}.csv')
+        df_ritmos.to_csv(rf'.\APP\data\bueno\{year}\Ritmos\Teams\df_ritmos_{year}.csv')
         data = {
             "team_palette": team_palette
         }
 
-        with open(rf'.\data\bueno\{year}\Ritmos\Teams\team_info_{year}.json', 'w') as f:
+        with open(rf'.\APP\data\bueno\{year}\Ritmos\Teams\team_info_{year}.json', 'w') as f:
             json.dump(data, f)
 
 
@@ -407,7 +407,7 @@ def season_points_heatmap_by_team(year):
 
 #Get result data for the GP analysis
 def data_results_info(year, event):
-    all_results = pd.read_csv(rf'.\data\bueno\{year}\HtH\{year}_results.csv')
+    all_results = pd.read_csv(rf'.\APP\data\bueno\{year}\HtH\{year}_results.csv')
     results = all_results[['driverCode', 'position', 'totalRaceTime', 'status', 'points']][all_results['raceName'] == event].reset_index(drop=True)
 
     results = results.rename(columns={'driverCode': 'Driver', 'position':'Position', 
@@ -426,8 +426,8 @@ def data_results_info(year, event):
             results.at[index, 'Time'] = '+' + str(row['Time'])
 
 
-    os.makedirs(rf'.\data\bueno\{year}\results_info', exist_ok=True)
-    results.to_csv(rf'.\data\bueno\{year}\results_info\{event}_results.csv', index=False)
+    os.makedirs(rf'.\APP\data\bueno\{year}\results_info', exist_ok=True)
+    results.to_csv(rf'.\APP\data\bueno\{year}\results_info\{event}_results.csv', index=False)
 
 
 #Calculate qualifying delta times for a given event
@@ -468,10 +468,10 @@ def data_qualifying_times(year, event):
         'pole_lap': pole_lap_info
     }
 
-    os.makedirs(rf'.\data\bueno\{year}\qualifying_times', exist_ok=True)
+    os.makedirs(rf'.\APP\data\bueno\{year}\qualifying_times', exist_ok=True)
 
-    delta_times.to_csv(rf'.\data\bueno\{year}\qualifying_times\{event}_qualifying_times.csv')
-    with open(rf'.\data\bueno\{year}\qualifying_times\{event}_complementary_info.json', 'w') as f:
+    delta_times.to_csv(rf'.\APP\data\bueno\{year}\qualifying_times\{event}_qualifying_times.csv')
+    with open(rf'.\APP\data\bueno\{year}\qualifying_times\{event}_complementary_info.json', 'w') as f:
         json.dump(complementary_info, f)
 
 
@@ -510,9 +510,9 @@ def data_position_changes(year, event):
             if pd.isna(row[lap]):
                 all_laps_df.at[driver, lap] = final_positions[driver]
 
-    os.makedirs(rf'.\data\bueno\{year}\pos_changes_race', exist_ok=True)
-    all_laps_df.to_csv(rf'.\data\bueno\{year}\pos_changes_race\df_position_{year}_{event}.csv')
-    with open(rf'.\data\bueno\{year}\pos_changes_race\driver_style_{year}_{event}.json', 'w') as f:
+    os.makedirs(rf'.\APP\data\bueno\{year}\pos_changes_race', exist_ok=True)
+    all_laps_df.to_csv(rf'.\APP\data\bueno\{year}\pos_changes_race\df_position_{year}_{event}.csv')
+    with open(rf'.\APP\data\bueno\{year}\pos_changes_race\driver_style_{year}_{event}.json', 'w') as f:
         json.dump(drivers_style, f)
 
 #Calculate the relative distances of the drivers to the leader in each lap
@@ -570,10 +570,10 @@ def data_relative_distances(year, event):
             drivers_style[drv] = style
         except:
             continue
-    os.makedirs(rf'.\data\bueno\{year}\relative_distances', exist_ok=True)
+    os.makedirs(rf'.\APP\data\bueno\{year}\relative_distances', exist_ok=True)
 
-    distances_to_first.to_csv(rf'.\data\bueno\{year}\relative_distances\{event}_relative_distances.csv', index=True)
-    with open(rf'.\data\bueno\{year}\relative_distances\{event}_styles.json', 'w') as f:
+    distances_to_first.to_csv(rf'.\APP\data\bueno\{year}\relative_distances\{event}_relative_distances.csv', index=True)
+    with open(rf'.\APP\data\bueno\{year}\relative_distances\{event}_styles.json', 'w') as f:
         json.dump(drivers_style, f)
 
 #Calculate the pitstop strategies of all drivers for a given event
@@ -598,11 +598,11 @@ def data_pitstop_estrategy(year, event):
         compound_color = fastf1.plotting.get_compound_color(compound, session=race)
         compound_colors[compound] = compound_color
 
-    os.makedirs(rf'.\data\bueno\{year}\pitstop_strategies', exist_ok=True)
+    os.makedirs(rf'.\APP\data\bueno\{year}\pitstop_strategies', exist_ok=True)
 
-    stints.to_csv(rf'.\data\bueno\{year}\pitstop_strategies\{event_name}_pitstop_strategies.csv')
-    drivers_df.to_csv(rf'.\data\bueno\{year}\pitstop_strategies\{event_name}_positions.csv', index=False)
-    file_path = rf'.\data\bueno\{year}\pitstop_strategies\compound_colors.json'
+    stints.to_csv(rf'.\APP\data\bueno\{year}\pitstop_strategies\{event_name}_pitstop_strategies.csv')
+    drivers_df.to_csv(rf'.\APP\data\bueno\{year}\pitstop_strategies\{event_name}_positions.csv', index=False)
+    file_path = rf'.\APP\data\bueno\{year}\pitstop_strategies\compound_colors.json'
     if not os.path.exists(file_path):
         with open(file_path, 'w') as f:
             json.dump(compound_colors, f)
@@ -644,9 +644,9 @@ def data_overlap_telemetries(year, event):
         except:
             continue
 
-    telemetries_path = rf'.\data\bueno\{year}\telemetries\{event}_telemetries.json'
-    styles_path = rf'.\data\bueno\{year}\telemetries\{event}_styles.json'
-    laps_path = rf'.\data\bueno\{year}\telemetries\{event}_laptimes.json'
+    telemetries_path = rf'.\APP\data\bueno\{year}\telemetries\{event}_telemetries.json'
+    styles_path = rf'.\APP\data\bueno\{year}\telemetries\{event}_styles.json'
+    laps_path = rf'.\APP\data\bueno\{year}\telemetries\{event}_laptimes.json'
 
     # Ensure the directory exists
     os.makedirs(os.path.dirname(telemetries_path), exist_ok=True)
@@ -682,8 +682,8 @@ def data_laptimes_race(year, event):
         style = fastf1.plotting.get_driver_style(identifier=driver, style=['color', 'linestyle'], session=race)
         drivers_style[driver] = style
 
-    lap_times_path = rf'.\data\bueno\{year}\laptimes\{event}_laptimes.json'
-    styles_path = rf'.\data\bueno\{year}\laptimes\{event}_styles.json'
+    lap_times_path = rf'.\APP\data\bueno\{year}\laptimes\{event}_laptimes.json'
+    styles_path = rf'.\APP\data\bueno\{year}\laptimes\{event}_styles.json'
 
     # Convert telemetries to a serializable format
     all_lap_times_serializable = {driver: lap_times.to_dict(orient='list') for driver, lap_times in all_lap_times.items()}
@@ -702,38 +702,28 @@ def data_laptimes_race(year, event):
 
 
 def load_all_data(year):
-    # get_season_results(year)
-    # get_season_q_results(year)
-    # data_year_pace_driver(year)
-    # data_year_pace_team(year)
+    get_season_results(year)
+    get_season_q_results(year)
+    data_year_pace_driver(year)
+    data_year_pace_team(year)
 
-    # season_points_heatmap(year)
-    # season_points_heatmap_by_team(year)
+    season_points_heatmap(year)
+    season_points_heatmap_by_team(year)
     
-    all_results = pd.read_csv(rf'.\data\bueno\{year}\HtH\{year}_results.csv')
+    all_results = pd.read_csv(rf'.\APP\data\bueno\{year}\HtH\{year}_results.csv')
     events = all_results['raceName'].unique()
 
-    done = ['Bahrain Grand Prix', 'Saudi Arabian Grand Prix',
-       'Australian Grand Prix', 'Japanese Grand Prix',
-       'Chinese Grand Prix', 'Miami Grand Prix',
-       'Emilia Romagna Grand Prix', 'Monaco Grand Prix',
-       'Canadian Grand Prix', 'Spanish Grand Prix', 'Austrian Grand Prix',
-       'British Grand Prix', 'Hungarian Grand Prix', 'Belgian Grand Prix',
-       'Dutch Grand Prix', 'Italian Grand Prix', 'Azerbaijan Grand Prix',
-       'Singapore Grand Prix', 'United States Grand Prix', 'Mexico City Grand Prix']
-    
     for event in events:
-        if event not in done:
-            data_results_info(year, event)
-            data_qualifying_times(year, event)
-            data_position_changes(year, event)
-            data_relative_distances(year, event)
-            data_pitstop_estrategy(year, event)
-            data_overlap_telemetries(year, event)
-            data_laptimes_race(year, event)
+        data_results_info(year, event)
+        data_qualifying_times(year, event)
+        data_position_changes(year, event)
+        data_relative_distances(year, event)
+        data_pitstop_estrategy(year, event)
+        data_overlap_telemetries(year, event)
+        data_laptimes_race(year, event)
 
 
 if __name__ == '__main__':
     year = int(sys.argv[1])
-    os.makedirs(rf'.\data\bueno\{year}', exist_ok=True)
+    os.makedirs(rf'.\APP\data\bueno\{year}', exist_ok=True)
     load_all_data(year)
