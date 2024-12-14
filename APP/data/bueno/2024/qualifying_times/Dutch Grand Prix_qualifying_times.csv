@@ -1,20 +1,3 @@
-,LapTime,Driver,Team,LapTimeDelta
-0,0 days 00:01:09.673000,NOR,McLaren,0.0
-1,0 days 00:01:10.029000,VER,Red Bull Racing,0.356
-2,0 days 00:01:10.172000,PIA,McLaren,0.499
-3,0 days 00:01:10.244000,RUS,Mercedes,0.571
-4,0 days 00:01:10.416000,PER,Red Bull Racing,0.743
-5,0 days 00:01:10.582000,LEC,Ferrari,0.909
-6,0 days 00:01:10.633000,ALO,Aston Martin,0.96
-7,0 days 00:01:10.653000,ALB,Williams,0.98
-8,0 days 00:01:10.661000,STR,Aston Martin,0.988
-9,0 days 00:01:10.815000,GAS,Alpine,1.142
-10,0 days 00:01:10.914000,SAI,Ferrari,1.241
-11,0 days 00:01:10.948000,HAM,Mercedes,1.275
-12,0 days 00:01:10.955000,TSU,RB,1.282
-13,0 days 00:01:11.215000,HUL,Haas F1 Team,1.542
-14,0 days 00:01:11.295000,MAG,Haas F1 Team,1.622
-15,0 days 00:01:11.943000,RIC,RB,2.27
-16,0 days 00:01:11.995000,OCO,Alpine,2.322
-17,0 days 00:01:12.168000,BOT,Kick Sauber,2.495
-18,0 days 00:01:13.261000,ZHO,Kick Sauber,3.588
+version https://git-lfs.github.com/spec/v1
+oid sha256:d5dc3f809bb2c2be84b26fd34f8e74c539b6e543bd46238d40607b540bfcfd47
+size 910

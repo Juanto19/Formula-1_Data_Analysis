@@ -1,21 +1,3 @@
-Driver,Position,Time,Status,Points
-PIA,1,01:32:58.007000,Finished,25
-LEC,2,+00:00:10.910000,Finished,18
-RUS,3,+00:00:31.328000,Finished,15
-NOR,4,+00:00:36.143000,Finished,13
-VER,5,+00:01:17.098000,Finished,10
-ALO,6,+00:01:25.468000,Finished,8
-ALB,7,+00:01:27.396000,Finished,6
-COL,8,+00:01:29.541000,Finished,4
-HAM,9,+00:01:32.401000,Finished,2
-BEA,10,+00:01:33.127000,Finished,1
-HUL,11,+00:01:33.465000,Finished,0
-GAS,12,+00:01:57.189000,Finished,0
-RIC,13,+00:02:26.907000,Finished,0
-ZHO,14,+00:02:28.841000,Finished,0
-OCO,15,,+1 Lap,0
-BOT,16,,+1 Lap,0
-PER,17,,Retired,0
-SAI,18,,Retired,0
-STR,19,,Retired,0
-TSU,20,,Retired,0
+version https://git-lfs.github.com/spec/v1
+oid sha256:a2522ae9309a85009836c528e0c9b7553098f2dba89d40b5659c5ecfa534b356
+size 647
