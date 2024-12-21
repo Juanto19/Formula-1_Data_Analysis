@@ -1,59 +1,67 @@
-/* Cambiar el color de fondo */
+/* style.css */
+
+/* Cambiar el fondo general a un gradiente */
+html, body, [data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #cdf7fc, #eaeace, #eaeace, #cdf7fc);
+    background-size: 400% 400%; /* Para animación suave, si es deseado */
+    animation: gradientBG 30s ease infinite; /* Animación opcional */
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Opcional: Animación del gradiente */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+
+/* Cambiar el estilo del bloque superior (header o navbar) */
+header[data-testid="stHeader"] {
+    background: transparent; /* Hacer el fondo transparente */
+    border-bottom: 0px solid #000000; /* Línea opcional para separación */
+}
+
+/* Opcional: Ajustar el padding y márgenes */
+header[data-testid="stHeader"] {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* Cambiar el color de fondo de la barra lateral */
+section[data-testid="stSidebar"] {
+    width: 300px;
+    background: linear-gradient(135deg, #cdf7fc, #eaeace);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
 body {
-    background-color: #f5f5f5;
-}
-
-@font-face {
-    font-family: 'F1 Regular';
-    src: url('Formula1-Regular_web_0.ttf') format('truetype');
-}
-
-/* @font-face {
-    font-family: 'F1 Wide';
-    src: url('D:\Cositas\Proyecto_UH\APP\Formula1-Wide_web_0.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'F1 Bold';
-    src: url('D:\Cositas\Proyecto_UH\APP\Formula1-Bold_web_0.ttf') format('truetype');
-} */
-
-
-h1{
-    font-family: 'F1 Regular', sans-serif;
-    font-weight: 700; /* Ajusta a 400 si prefieres un grosor menor */
-    color: #000; /* Cambia el color si es necesario */
-    text-transform: uppercase; /* Si deseas mantener el texto en mayúsculas */
-    margin-bottom: 10px;
+    font-family: 'Arial', sans-serif; /* Cambia a tu fuente preferida */
+    color: #222222; /* Color global del texto */
+    font-size: 16px; /* Tamaño base de la fuente */
+    line-height: 1.6; /* Espaciado entre líneas para legibilidad */
 }
 
 
-h2{
-    font-family: 'F1 Regular', sans-serif;
-    font-weight: 700; /* Ajusta a 400 si prefieres un grosor menor */
-    color: #000; /* Cambia el color si es necesario */
-    text-transform: uppercase; /* Si deseas mantener el texto en mayúsculas */
-    margin-bottom: 10px;
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Georgia', serif; /* Fuente específica para los títulos */
+    color: #000000; /* Color único para los títulos */
+    font-weight: bold; /* Texto más grueso */
+    text-align: center; /* Centrar los encabezados */
 }
 
-h3, h4{
-    font-family: 'F1 Regular', sans-serif;
-    font-weight: 700; /* Ajusta a 400 si prefieres un grosor menor */
-    color: #000; /* Cambia el color si es necesario */
-    text-transform: uppercase; /* Si deseas mantener el texto en mayúsculas */
-    margin-bottom: 10px;
+/* Cambiar el texto en los campos de entrada (input) */
+input[type="number"] {
+    font-family: 'Arial', sans-serif; /* Cambia la fuente */
+    font-size: 14px; /* Ajusta el tamaño del texto */
+    color: #222222; /* Cambia el color del texto */
 }
 
-/* Cambiar la apariencia de la barra lateral */
-.sidebar .sidebar-content {
-    background-color: #222;
-    color: white;
-}
-
-/* Botones personalizados */
-button {
-    background-color: #FF4500 !important;
-    color: white !important;
-    border-radius: 5px;
-    border: none;
-}

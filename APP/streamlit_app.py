@@ -16,6 +16,15 @@ st.set_page_config(
     layout="wide",    
     initial_sidebar_state="collapsed"
 )
+
+# Función para cargar el CSS
+def load_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+# Carga del CSS
+load_css("APP\style.css")
+
 # Aplicar el archivo CSS para la personalización del tema
 # with open(r"./APP/style.css") as f:
 #     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
