@@ -23,7 +23,7 @@ def load_css(file_name):
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 # Carga del CSS
-load_css("APP\style.css")
+load_css("APP/style.css")
 
 # Aplicar el archivo CSS para la personalización del tema
 # with open(r"./APP/style.css") as f:
