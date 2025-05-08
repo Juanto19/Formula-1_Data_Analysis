@@ -1,6 +1,12 @@
 import streamlit as st
 import sys
 
+import tomli as tomllib, pathlib
+from data_adapter import get_adapter, Source
+
+cfg = tomllib.loads(pathlib.Path("config.toml").read_text())
+ADAPTER = get_adapter(Source(cfg["app"]["data_source"]))
+
 sys.path.append(r'./APP')
 # APP/page_prueba/Grand_Prix.py
 from page_prueba.Grand_Prix import app as gran_premio_app
