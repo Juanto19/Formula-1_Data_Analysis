@@ -1,31 +1,47 @@
-from pathlib import Path	
-import pandas as pd	
+# data_adapter/kaggle.py
+from pathlib import Path
+from typing import Dict
 
-DATA_DIR = Path(file).resolve().parents[2] / "data" / "kaggle"
+import pandas as pd
+
+
+# Path to …/data/kaggle/   (use __file__, not file)
+DATA_DIR = (Path(__file__).resolve()            # kaggle.py
+            .parents[1]                         # → repo root
+            / "data" / "kaggle")                # → …/data/kaggle
+
 
 class KaggleAdapter:
     """Loads raw Kaggle CSVs and exposes high-level getters used by the app."""
-def __init__(self, root: Path = DATA_DIR):  
-    self.root = root  
-    self._cache = {}  # type: dict[str, pd.DataFrame]
 
-# ---------- low-level ----------  
-def _load(self, name: str) -> pd.DataFrame:  
-    if name not in self._cache:  
-        self._cache[name] = pd.read_csv(self.root / f"{name}.csv")  
-    return self._cache[name]  
+    # ---------- constructor ----------
+    def __init__(self, root: Path = DATA_DIR) -> None:
+        self.root = root
+        self._cache: Dict[str, pd.DataFrame] = {}   # read-once cache
 
-# ---------- high-level ----------  
-def season_results(self, year: int) -> pd.DataFrame:  
-    races = self._load("races")  
-    results = self._load("results")  
-    return (  
-        races.query("year == @year")  
-              .merge(results, on="raceId")  
-    )  
+    # ---------- low-level ----------
+    def _load(self, name: str) -> pd.DataFrame:
+        """Read <root>/<name>.csv once per process and cache."""
+        if name not in self._cache:
+            self._cache[name] = pd.read_csv(self.root / f"{name}.csv")
+        return self._cache[name]
 
-def race_results(self, year: int, gp_name: str) -> pd.DataFrame:  
-    races = self._load("races")  
-    results = self._load("results")  
-    race_id = races.query("year == @year & name == @gp_name").iloc[0]["raceId"]  
-    return results.query("raceId == @race_id")  
+    # ---------- high-level ----------
+    def season_results(self, year: int) -> pd.DataFrame:
+        """All results for one championship season (joined to race meta)."""
+        races   = self._load("races")
+        results = self._load("results")
+        return (
+            races.query("year == @year")
+                 .merge(results, on="raceId", how="inner")
+        )
+
+    def race_results(self, year: int, gp_name: str) -> pd.DataFrame:
+        """Results for a single Grand Prix (uses GP ‘official name’)."""
+        races   = self._load("races")
+        results = self._load("results")
+        race_id = (
+            races.query("year == @year and name == @gp_name")
+                 .iloc[0]["raceId"]
+        )
+        return results.query("raceId == @race_id")
