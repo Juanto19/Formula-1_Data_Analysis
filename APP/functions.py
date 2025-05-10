@@ -1,3 +1,25 @@
+# APP/functions.py  (top of file)
+
+# ------------------------------------------------------------
+# Get the global ADAPTER from streamlit_app *if* that module
+# has already been imported; otherwise build our own on the fly.
+# ------------------------------------------------------------
+import importlib
+import tomli as tomllib, pathlib
+from data_adapter import get_adapter
+
+try:
+    # If streamlit_app is already loaded (normal Streamlit run),
+    # re-use its singleton so we share the in-memory CSV cache.
+    streamlit_app = importlib.import_module("streamlit_app")
+    ADAPTER = streamlit_app.ADAPTER
+except ModuleNotFoundError:
+    # CLI / pytest run: build a fresh adapter based on config.toml
+    cfg = tomllib.loads(pathlib.Path("config.toml").read_text())
+    ADAPTER = get_adapter(cfg["app"]["data_source"])
+
+
+
 import pandas as pd
 import numpy as np
 
@@ -27,6 +49,9 @@ from fastf1.ergast import Ergast
 import statistics as st
 from time import sleep
 
+from pathlib import Path
+# from streamlit_app import ADAPTER   
+
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -42,6 +67,7 @@ warnings.filterwarnings("ignore")
 
 #Obtain the results for a given year
 
+'''
 def get_season_results(year):
     ergast = Ergast()
     races = ergast.get_race_schedule(year)  
@@ -71,6 +97,43 @@ def get_season_results(year):
     os.makedirs(rf'.\data\bueno\{year}\HtH', exist_ok=True)
     results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_results.csv', index=False)
     sprint_results.to_csv(rf'.\data\bueno\{year}\HtH\{year}_sprint_results.csv', index=False)
+'''
+
+def get_season_results(year: int) -> pd.DataFrame:
+    """
+    Return a tidy DataFrame with every classified result (and points)
+    for the requested championship season, **regardless of back-end**.
+
+    The signature and the column order match the old Ergast helper so
+    no downstream code has to change.
+    """
+    # 1) one-liner fetch from the active adapter
+    df = ADAPTER.season_results(year)
+
+    # 2) normalise column names so callers see the same headers
+    rename_map = {
+        "driverRef": "driverCode",       # Kaggle → Ergast naming
+        "constructorRef": "constructorName",
+        "name": "raceName",              # from races.csv
+        "round": "round",                # already correct
+    }
+    df = df.rename(columns={k: v for k, v in rename_map.items() if k in df.columns})
+
+    # 3) reorder for perfect backward compatibility
+    wanted = [
+        "raceName", "round",
+        "driverCode", "constructorName",
+        "grid", "position", "status",
+        "points", "milliseconds", "fastestLapTime"
+    ]
+    df = df[[c for c in wanted if c in df.columns]]
+
+    # 4) ↩️ keep the old “write to CSV” side-effect so plotting.py still works
+    out_dir = Path(f"APP/data/bueno/{year}/HtH")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out_dir / f"{year}_results.csv", index=False)
+
+    return df
 
 #Obtain the qualifying results for a given year
 def get_season_q_results(year):
