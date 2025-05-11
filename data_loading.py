@@ -19,17 +19,63 @@ from plotly.subplots import make_subplots
 
 from timple.timedelta import strftimedelta
 import datetime
-import fastf1
+import fastf1, requests_cache, pathlib
 import fastf1.plotting
 from fastf1.core import Laps
 from fastf1.ergast import Ergast
 
 import statistics as st
 from time import sleep
+from concurrent.futures import ThreadPoolExecutor
 
 import warnings
 import sys
 warnings.filterwarnings("ignore")
+
+###################################################################################
+###################################################################################
+#Cosas de Cache
+CACHE_ROOT   = pathlib.Path.home() / ".cache" / "f1"   # or pathlib.Path('.cache') if you prefer local
+FASTF1_CACHE = CACHE_ROOT / "fastf1"                   # same path you pass to FastF1
+ERGAST_CACHE = CACHE_ROOT / "ergast"                   # requests-cache will add “.sqlite”
+
+# make sure the folders exist  ✅
+FASTF1_CACHE.mkdir(parents=True, exist_ok=True)        # also creates CACHE_ROOT
+
+# now you can safely enable the caches
+fastf1.Cache.enable_cache(str(FASTF1_CACHE))
+requests_cache.install_cache(str(ERGAST_CACHE), expire_after=86400)  # 24 h
+
+########################################################################################
+
+#ergast helper
+def _ergast_to_df(resp):
+    """
+    Convert anything returned by fastf1.ergast into a DataFrame.
+
+    Handles:
+      * new-style DataFrame (FastF-1 ≥ 3.4)          -> returned unchanged
+      * ErgastSimpleResponse with `.content`        -> first element
+      * dict / list of dicts                        -> DataFrame
+      * empty payload                               -> None
+    """
+    import pandas as pd
+
+    # new API: already a DataFrame
+    if isinstance(resp, pd.DataFrame):
+        return resp.copy()
+
+    # old API: ErgastSimpleResponse
+    if hasattr(resp, "content"):
+        if resp.content:
+            return pd.DataFrame(resp.content[0])
+        return None
+
+    # plain python objects (rare)
+    try:
+        return pd.DataFrame(resp)
+    except Exception:
+        return None
 
 
 
@@ -44,68 +90,96 @@ warnings.filterwarnings("ignore")
 
 #Obtain the results for a given year
 
-def get_season_results(year):
+from concurrent.futures import ThreadPoolExecutor
+import os, pandas as pd
+from fastf1.ergast import Ergast
+
+# Get season results for a given year
+def get_season_results(year: int):
     ergast = Ergast()
-    races = ergast.get_race_schedule(year)  
-    results = []
-    sprint_results = []
 
-    # For each race in the season
-    for rnd, race in races['raceName'].items():
+    # schedule – works for old & new API
+    schedule = _ergast_to_df(ergast.get_race_schedule(year))
+    if schedule is None or schedule.empty:
+        raise RuntimeError(f"No race schedule found for {year}")
 
-        # Get race results
-        temp = ergast.get_race_results(season=year, round=rnd + 1)
-        result = pd.DataFrame(temp.content[0])
-        
-        # If there is a sprint, get the results as well
-        sprint = ergast.get_sprint_results(season=year, round=rnd + 1)
-        if sprint.content and sprint.description['round'][0] == rnd + 1:
-            sprint_result = pd.DataFrame(sprint.content[0])
-            sprint_result['raceName'] = race
-            sprint_results.append(sprint_result)
+    # ---------------------------------------------------------------
+    def _one_round(row):
+        rnd, gp_name = int(row['round']), row['raceName']
 
-        result['raceName'] = race
-        results.append(result)
+        res = _ergast_to_df(ergast.get_race_results(year, rnd))
+        if res is not None:
+            res['raceName'] = gp_name
 
-    # Concatenate all results
-    results = pd.concat(results, ignore_index=True)
-    sprint_results = pd.concat(sprint_results, ignore_index=True) if sprint_results else pd.DataFrame()
-    
-    os.makedirs(rf'.\APP\data\bueno\{year}\HtH', exist_ok=True)
+        sres = _ergast_to_df(ergast.get_sprint_results(year, rnd))
+        if sres is not None:
+            sres['raceName'] = gp_name
 
-    results.to_csv(rf'.\APP\data\bueno\{year}\HtH\{year}_results.csv', index=False)
-    sprint_results.to_csv(rf'.\APP\data\bueno\{year}\HtH\{year}_sprint_results.csv', index=False)
+        return res, sres
+    # ---------------------------------------------------------------
+
+    with ThreadPoolExecutor(max_workers=6) as ex:
+        out = list(ex.map(_one_round, [r for _, r in schedule.iterrows()]))
+
+    # filter out Nones before concat --------------------------------
+    results_list  = [r for r, _ in out if r is not None]
+    sprint_list   = [s for _, s in out if s is not None]
+
+    if not results_list:
+        raise RuntimeError("Ergast returned no race results!")
+
+    results        = pd.concat(results_list,  ignore_index=True)
+    sprint_results = (pd.concat(sprint_list, ignore_index=True)
+                      if sprint_list else pd.DataFrame())
+
+    # save ----------------------------------------------------------
+    out_dir = rf'.\APP\data\bueno\{year}\HtH'
+    os.makedirs(out_dir, exist_ok=True)
+
+    results.to_csv(fr'{out_dir}\{year}_results.csv',         index=False)
+    sprint_results.to_csv(fr'{out_dir}\{year}_sprint_results.csv', index=False)
 
 #Obtain the qualifying results for a given year
-def get_season_q_results(year):
+def get_season_q_results(year: int):
     ergast = Ergast()
-    races = ergast.get_race_schedule(year)  
-    q_results = []
 
-    # For each race in the season
-    for rnd, race in races['raceName'].items():
+    # schedule works for both old and new FastF1
+    schedule = _ergast_to_df(ergast.get_race_schedule(year))
+    if schedule is None or schedule.empty:
+        raise RuntimeError(f"No race schedule found for {year}")
 
-        # Get results
-        temp = ergast.get_qualifying_results(season=year, round=rnd + 1)
-        q_result = pd.DataFrame(temp.content[0])
-        q_result['raceName'] = race
-        q_results.append(q_result)
+    # ---------------- helper for one Grand Prix -----------------------------
+    def _one_round(row):
+        rnd, gp_name = int(row["round"]), row["raceName"]
 
-    # Concatenate all results
-    q_results = pd.concat(q_results, ignore_index=True)
-    q_results = q_results.copy()
+        qdf = _ergast_to_df(ergast.get_qualifying_results(year, rnd))
+        if qdf is None or qdf.empty:           # early seasons (pre-2003) have no quali
+            return None
+        qdf["raceName"] = gp_name
+        return qdf
+    # -----------------------------------------------------------------------
 
-    q_results['Q1'] = pd.to_timedelta(q_results['Q1'])
-    q_results['Q2'] = pd.to_timedelta(q_results['Q2'])
-    q_results['Q3'] = pd.to_timedelta(q_results['Q3'])
+    # run 5–6 requests in parallel (safe w.r.t. Ergast’s 1 req/s guideline)
+    with ThreadPoolExecutor(max_workers=6) as ex:
+        out = list(ex.map(_one_round, [r for _, r in schedule.iterrows()]))
 
-    q_results['Q1 (s)'] = q_results['Q1'].dt.total_seconds().round(3)
-    q_results['Q2 (s)'] = q_results['Q2'].dt.total_seconds().round(3)
-    q_results['Q3 (s)'] = q_results['Q3'].dt.total_seconds().round(3)
-    
-    os.makedirs(rf'.\APP\data\bueno\{year}\HtH', exist_ok=True)
-    q_results.to_csv(rf'.\APP\data\bueno\{year}\HtH\{year}_q_results.csv', index=False)
+    # filter out rounds that returned None
+    q_frames = [df for df in out if df is not None]
+    if not q_frames:
+        raise RuntimeError("Ergast returned no qualifying results!")
 
+    q_results = pd.concat(q_frames, ignore_index=True)
+
+    # ---------------- tidy up lap-time strings ------------------------------
+    for col in ("Q1", "Q2", "Q3"):
+        if col in q_results:
+            q_results[col] = pd.to_timedelta(q_results[col], errors="coerce")
+            q_results[f"{col} (s)"] = q_results[col].dt.total_seconds().round(3)
+    # -----------------------------------------------------------------------
+
+    out_dir = rf".\APP\data\bueno\{year}\HtH"
+    os.makedirs(out_dir, exist_ok=True)
+    q_results.to_csv(fr"{out_dir}\{year}_q_results.csv", index=False)
 ###################################################################################
 
 # PACE FUNCTIONS
@@ -127,7 +201,7 @@ def data_year_pace_driver(year):
         
         # Load race data
         race = fastf1.get_session(year, race_name, 'R')
-        race.load()
+        race.load(laps=True, telemetry=False, weather=False, messages=False)
         laps = race.laps.pick_quicklaps(1.15)
 
         # Transform lap time to seconds
@@ -143,15 +217,10 @@ def data_year_pace_driver(year):
         drivers_difference['Difference'] = drivers_difference['LapTime (s)'] - drivers_difference['MeanLapTime']
 
         # Create a dictionary to map each driver to their team
-        drivers = pd.DataFrame(data=transformed_laps[['Driver', 'Team']].groupby(['Driver'], as_index=False, sort=False).max())
-        for _, row in drivers.iterrows():
-            driver = row['Driver']
-            team = row['Team']
-            if team in team_drivers:
-                if driver not in team_drivers[team]:
-                    team_drivers[team].append(driver)
-            else:
-                team_drivers[team] = [driver]
+        # drivers = pd.DataFrame(data=transformed_laps[['Driver', 'Team']].groupby(['Driver'], as_index=False, sort=False).max())
+        pairs = (transformed_laps[['Team', 'Driver']]
+                .drop_duplicates())
+        team_drivers = {t: list(g['Driver']) for t, g in pairs.groupby('Team')}
 
         # Group by driver and calculate mean difference
         mean_diff_driver = drivers_difference[["Driver", "Difference"]].groupby("Driver").mean()["Difference"].sort_values()
@@ -162,11 +231,9 @@ def data_year_pace_driver(year):
             if driver not in driver_palette.keys():
                 driver_palette[driver] = fastf1.plotting.get_driver_color(driver, race)
         
-    for team in team_drivers.keys():
-        n = 0
-        for driver in team_drivers[team]:
-            driver_number[driver] = n
-            n += 1
+    driver_number = {drv: n
+                 for _, grp in pairs.groupby('Team')
+                 for n, drv in enumerate(grp['Driver'])}
 
     mean_diff_df = pd.concat(mean_diff_list, axis=1)
 
@@ -210,7 +277,7 @@ def data_year_pace_team(year):
         
         # Load race data
         race = fastf1.get_session(year, race_name, 'R')
-        race.load()
+        race.load(laps=True, telemetry=False, weather=False, messages=False)
         laps = race.laps.pick_quicklaps(1.15)
 
         # Transform lap time to seconds
@@ -431,10 +498,7 @@ def data_results_info(year, event):
 
 
 #Calculate qualifying delta times for a given event
-def data_qualifying_times(year, event):
-    session = fastf1.get_session(year, event, 'Q')
-    session.load()
-
+def data_qualifying_times(year, session, event):
     drivers = pd.unique(session.laps['Driver'])
 
     list_fastest_laps = list()
@@ -476,9 +540,8 @@ def data_qualifying_times(year, event):
 
 
 #Calculate position changes during the race
-def data_position_changes(year, event):
-    race = fastf1.get_session(year, event, 'R')
-    race.load(telemetry=False, weather=False)
+def data_position_changes(year, session, event):
+    race = session
     # event_name = race.event['EventName']
 
     drivers_style = {}
@@ -516,70 +579,49 @@ def data_position_changes(year, event):
         json.dump(drivers_style, f)
 
 #Calculate the relative distances of the drivers to the leader in each lap
-def data_relative_distances(year, event):
-    race = fastf1.get_session(year, event, 'R')
-    race.load()
+def data_relative_distances(year, session, event):
+    race = session
 
-    # Preparar datos
-    laps = race.laps
-    drivers = race.drivers
-    event_name = race.event['EventName']
-    # Crear un diccionario para almacenar el tiempo de inicio del primer piloto de cada vuelta
-    first_driver_start_times = {}
+    laps = race.laps[['LapNumber', 'Driver', 'DriverNumber', 'Position', 'Time']].copy()
 
-    # Iterar sobre cada vuelta
-    for lap in laps['LapNumber'].unique():
-        # Filtrar las vueltas del piloto y seleccionar la primera posición
-        first_driver_lap = laps[(laps['LapNumber'] == lap) & (laps['Position'] == 1)]
+    # 1. All times in seconds
+    laps['Time_s'] = pd.to_timedelta(laps['Time']).dt.total_seconds()
 
-        if not first_driver_lap.empty:
-            # Obtener el tiempo de inicio del primer piloto
-            start_time = pd.Timedelta(first_driver_lap['Time'].values[0]).total_seconds()
-            first_driver = first_driver_lap['DriverNumber'].values[0]
-            
-            first_driver_start_times[lap] = [start_time, first_driver]
+    # 2. Leader’s start-time for every lap (one vectorised groupby)
+    leader_time = (laps.loc[laps['Position'] == 1, ['LapNumber', 'Time_s']]
+                        .drop_duplicates('LapNumber')
+                        .set_index('LapNumber')['Time_s'])
 
-    # # Crear un DataFrame para almacenar las distancias de cada piloto al primero en cada vuelta
-    distances_to_first = pd.DataFrame(index=laps['LapNumber'].unique(), columns=drivers)
-    
-    # Iterar sobre cada vuelta y cada piloto
-    for lap in first_driver_start_times.keys():
-        for driver in drivers:
-            try: 
-                # Filtrar las vueltas del piloto y seleccionar la vuelta correspondiente
-                driver_lap = laps[(laps['LapNumber'] == lap) & (laps['DriverNumber'] == driver)]
-            except:
-                continue
-            if not driver_lap.empty:
-                # Obtener el tiempo de inicio del piloto
-                driver_start_time = pd.Timedelta(driver_lap['Time'].values[0]).total_seconds()
-                # Calcular la distancia al primer piloto en segundos
-                distance_to_first = driver_start_time - first_driver_start_times[lap][0]
-                distances_to_first.loc[lap, driver] = distance_to_first
+    # 3. Broadcast: subtract leader’s time from *every* row
+    laps['LeaderStart'] = laps['LapNumber'].map(leader_time)
+    laps['Distance']    = laps['Time_s'] - laps['LeaderStart']
 
-    # Convertir el DataFrame a tipo float
-    distances_to_first.astype(float)
-    # Change the column names from driverNumber to Driver (3 letter abbreviation)
-    driver_abbr = laps[['DriverNumber', 'Driver']].drop_duplicates().set_index('DriverNumber')['Driver'].to_dict()
-    distances_to_first.rename(columns=driver_abbr, inplace=True)
+    # 4. Wide table in one go, then rename columns from numbers → codes
+    dist_df = (laps.pivot(index='LapNumber',
+                          columns='DriverNumber',
+                          values='Distance')
+                    .astype(float))
 
-    drivers_style = {}
-    for drv in distances_to_first.columns:
-        try:
-            style = fastf1.plotting.get_driver_style(identifier=drv, style=['color', 'linestyle'], session=race)
-            drivers_style[drv] = style
-        except:
-            continue
-    os.makedirs(rf'.\APP\data\bueno\{year}\relative_distances', exist_ok=True)
+    abbr = (laps[['DriverNumber', 'Driver']]
+                .drop_duplicates()
+                .set_index('DriverNumber')['Driver'])
+    dist_df.rename(columns=abbr.to_dict(), inplace=True)
 
-    distances_to_first.to_csv(rf'.\APP\data\bueno\{year}\relative_distances\{event}_relative_distances.csv', index=True)
-    with open(rf'.\APP\data\bueno\{year}\relative_distances\{event}_styles.json', 'w') as f:
+    # 5. Styles & persist (unchanged I/O)
+    drivers_style = {drv: fastf1.plotting.get_driver_style(
+                            identifier=drv, style=['color', 'linestyle'],
+                            session=race)
+                     for drv in dist_df.columns}
+
+    out_dir = rf'.\APP\data\bueno\{year}\relative_distances'
+    os.makedirs(out_dir, exist_ok=True)
+    dist_df.to_csv(fr'{out_dir}\{event}_relative_distances.csv', index=True)
+    with open(fr'{out_dir}\{event}_styles.json', 'w') as f:
         json.dump(drivers_style, f)
 
 #Calculate the pitstop strategies of all drivers for a given event
-def data_pitstop_estrategy(year, event):
-    race = fastf1.get_session(year, event, 'R')
-    race.load()
+def data_pitstop_estrategy(year, session, event):
+    race = session
     event_name = race.event['EventName']
 
     laps = race.laps
@@ -609,10 +651,11 @@ def data_pitstop_estrategy(year, event):
 
 
 #Calculate the telemetry data for the qualifying lap
-def data_overlap_telemetries(year, event):
+def data_overlap_telemetries(year, session, event):
+    
     session = fastf1.get_session(year, event, 'Q')
     session.load()
-
+    
     drivers = session.laps.Driver.unique()
     drivers_style = {}
 
@@ -667,9 +710,8 @@ def data_overlap_telemetries(year, event):
 
 
 #Calculate the laptimes of the drivers in a given event
-def data_laptimes_race(year, event):
-    race = fastf1.get_session(year, event, 'R')
-    race.load()
+def data_laptimes_race(year, session, event):
+    race = session
     drivers = race.laps.Driver.unique()
 
     drivers_style = {}
@@ -700,7 +742,7 @@ def data_laptimes_race(year, event):
         json.dump(drivers_style, f)
 
 
-
+'''
 def load_all_data(year):
     get_season_results(year)
     get_season_q_results(year)
@@ -721,7 +763,27 @@ def load_all_data(year):
         data_pitstop_estrategy(year, event)
         data_overlap_telemetries(year, event)
         data_laptimes_race(year, event)
+'''
+def load_all_data(year: int):
+    get_season_results(year)
+    get_season_q_results(year)
+    data_year_pace_driver(year)
+    data_year_pace_team(year)
 
+    results = pd.read_csv(f'./APP/data/bueno/{year}/HtH/{year}_results.csv')
+    for gp in results['raceName'].unique():
+        q_sess = fastf1.get_session(year, gp, 'Q')
+        q_sess.load()                       # ONE call
+        r_sess = fastf1.get_session(year, gp, 'R')
+        r_sess.load(telemetry=False, weather=False, messages=False)  # ONE call, lighter
+
+        data_results_info(year, gp)                       # still file-based
+        data_qualifying_times(year, q_sess, gp)                     # pass the loaded obj
+        data_overlap_telemetries(year, q_sess, gp)
+        data_position_changes(year, r_sess, gp)               # gp = event
+        data_relative_distances(year, r_sess, gp)
+        data_pitstop_estrategy(year, r_sess, gp)
+        data_laptimes_race(year, r_sess, gp)
 
 if __name__ == '__main__':
     year = int(sys.argv[1])
